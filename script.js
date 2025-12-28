@@ -3,49 +3,54 @@
 // ========================================
 
 // ========================================
+// Browser Detection
+// ========================================
+
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+// ========================================
 // Default Data
 // ========================================
 
 const defaultCategories = [
-    { id: 'essentials', name: 'Essentials', icon: 'fa-solid fa-code', pinned: true, hidden: false },
-    { id: 'social', name: 'Social', icon: 'fa-solid fa-users', pinned: false, hidden: false },
-    { id: 'media', name: 'Media', icon: 'fa-solid fa-play', pinned: false, hidden: false },
-    { id: 'productivity', name: 'Productivity', icon: 'fa-solid fa-briefcase', pinned: false, hidden: false }
+    { id: 'dev', name: 'Development', icon: 'fa-solid fa-code' },
+    { id: 'social', name: 'Social', icon: 'fa-solid fa-users' },
+    { id: 'media', name: 'Media', icon: 'fa-solid fa-play' },
+    { id: 'productivity', name: 'Productivity', icon: 'fa-solid fa-briefcase' }
 ];
 
 const defaultLinks = {
-    'essentials': [
-        { name: 'Whatsapp', url: 'https://web.whatsapp.com/', icon: 'fa-brands fa-whatsapp', hidden: false },
-        { name: 'Telegram', url: 'https://web.telegram.org/z/', icon: 'fa-brands fa-telegram', hidden: false },
-        { name: 'Gmail', url: 'https://mail.google.com/mail/u/1/#inbox', icon: 'fa-regular fa-envelope', hidden: false },
-        { name: 'Google Drive', url: 'https://drive.google.com/drive/u/0/my-drive', icon: 'fa-brands fa-google-drive', hidden: false },
-        { name: 'Youtube', url: 'https://www.youtube.com/', icon: 'fa-brands fa-youtube', hidden: false },
-        { name: 'Google Sheets', url: 'https://docs.google.com/spreadsheets/u/1/', icon: 'fa-solid fa-table"', hidden: false }
-        
+    'dev': [
+        { name: 'GitHub', url: 'https://github.com', icon: 'fa-brands fa-github' },
+        { name: 'GitLab', url: 'https://gitlab.com', icon: 'fa-brands fa-gitlab' },
+        { name: 'Stack Overflow', url: 'https://stackoverflow.com', icon: 'fa-brands fa-stack-overflow' },
+        { name: 'CodePen', url: 'https://codepen.io', icon: 'fa-brands fa-codepen' },
+        { name: 'Vercel', url: 'https://vercel.com', icon: 'fa-solid fa-v' },
+        { name: 'Docker', url: 'https://docker.com', icon: 'fa-brands fa-docker' }
     ],
     'social': [
-        { name: 'Reddit', url: 'https://reddit.com', icon: 'fa-brands fa-reddit-alien', hidden: false },
-        { name: 'Twitter', url: 'https://twitter.com', icon: 'fa-brands fa-x-twitter', hidden: false },
-        { name: 'Discord', url: 'https://discord.com', icon: 'fa-brands fa-discord', hidden: false },
-        { name: 'LinkedIn', url: 'https://linkedin.com', icon: 'fa-brands fa-linkedin', hidden: false },
-        { name: 'Mastodon', url: 'https://mastodon.social', icon: 'fa-brands fa-mastodon', hidden: false },
-        { name: 'Twitch', url: 'https://twitch.tv', icon: 'fa-brands fa-twitch', hidden: false }
+        { name: 'Reddit', url: 'https://reddit.com', icon: 'fa-brands fa-reddit-alien' },
+        { name: 'Twitter', url: 'https://twitter.com', icon: 'fa-brands fa-x-twitter' },
+        { name: 'Discord', url: 'https://discord.com', icon: 'fa-brands fa-discord' },
+        { name: 'LinkedIn', url: 'https://linkedin.com', icon: 'fa-brands fa-linkedin' },
+        { name: 'Mastodon', url: 'https://mastodon.social', icon: 'fa-brands fa-mastodon' },
+        { name: 'Twitch', url: 'https://twitch.tv', icon: 'fa-brands fa-twitch' }
     ],
     'media': [
-        { name: 'YouTube', url: 'https://youtube.com', icon: 'fa-brands fa-youtube', hidden: false },
-        { name: 'Spotify', url: 'https://spotify.com', icon: 'fa-brands fa-spotify', hidden: false },
-        { name: 'Netflix', url: 'https://netflix.com', icon: 'fa-solid fa-film', hidden: false },
-        { name: 'SoundCloud', url: 'https://soundcloud.com', icon: 'fa-brands fa-soundcloud', hidden: false },
-        { name: 'Prime Video', url: 'https://primevideo.com', icon: 'fa-brands fa-amazon', hidden: false },
-        { name: 'Plex', url: 'https://plex.tv', icon: 'fa-solid fa-circle-play', hidden: false }
+        { name: 'YouTube', url: 'https://youtube.com', icon: 'fa-brands fa-youtube' },
+        { name: 'Spotify', url: 'https://spotify.com', icon: 'fa-brands fa-spotify' },
+        { name: 'Netflix', url: 'https://netflix.com', icon: 'fa-solid fa-film' },
+        { name: 'SoundCloud', url: 'https://soundcloud.com', icon: 'fa-brands fa-soundcloud' },
+        { name: 'Prime Video', url: 'https://primevideo.com', icon: 'fa-brands fa-amazon' },
+        { name: 'Plex', url: 'https://plex.tv', icon: 'fa-solid fa-circle-play' }
     ],
     'productivity': [
-        { name: 'Notion', url: 'https://notion.so', icon: 'fa-solid fa-book', hidden: false },
-        { name: 'Gmail', url: 'https://mail.google.com', icon: 'fa-solid fa-envelope', hidden: false },
-        { name: 'Calendar', url: 'https://calendar.google.com', icon: 'fa-solid fa-calendar-days', hidden: false },
-        { name: 'Drive', url: 'https://drive.google.com', icon: 'fa-brands fa-google-drive', hidden: false },
-        { name: 'Trello', url: 'https://trello.com', icon: 'fa-brands fa-trello', hidden: false },
-        { name: 'Figma', url: 'https://figma.com', icon: 'fa-brands fa-figma', hidden: false }
+        { name: 'Notion', url: 'https://notion.so', icon: 'fa-solid fa-book' },
+        { name: 'Gmail', url: 'https://mail.google.com', icon: 'fa-solid fa-envelope' },
+        { name: 'Calendar', url: 'https://calendar.google.com', icon: 'fa-solid fa-calendar-days' },
+        { name: 'Drive', url: 'https://drive.google.com', icon: 'fa-brands fa-google-drive' },
+        { name: 'Trello', url: 'https://trello.com', icon: 'fa-brands fa-trello' },
+        { name: 'Figma', url: 'https://figma.com', icon: 'fa-brands fa-figma' }
     ]
 };
 
@@ -71,6 +76,11 @@ const allSearchEngines = {
         url: 'https://github.com/search?q=',
         icon: '<i class="fa-brands fa-github"></i>'
     },
+    git: {
+        name: 'Git',
+        url: 'https://git-scm.com/search/results?search=',
+        icon: '<i class="fa-brands fa-git-alt"></i>'
+    },
     youtube: {
         name: 'YouTube',
         url: 'https://www.youtube.com/results?search_query=',
@@ -83,7 +93,7 @@ const allSearchEngines = {
     },
     amazon: {
         name: 'Amazon',
-        url: 'https://www.amazon.in/s?k=',
+        url: 'https://www.amazon.com/s?k=',
         icon: '<i class="fa-brands fa-amazon"></i>'
     },
     wikipedia: {
@@ -102,33 +112,61 @@ const allSearchEngines = {
 // Settings Management
 // ========================================
 
+// Small helper to escape HTML for value attributes
+function escapeHtml(str) {
+    if (str === undefined || str === null) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+
 function loadSettings() {
     const defaults = {
         userName: '',
+        colorScheme: 'catppuccin',
         theme: 'dark',
         colorMode: 'multi',
         timeFormat: '12',
-        tempUnit: 'C',
-        showQuotes: 'false',
-        enabledEngines: ['google', 'youtube'],
+        showSeconds: 'false',
+        tempUnit: 'F',
+        showQuotes: 'true',
+        enabledEngines: ['google', 'duckduckgo', 'github', 'youtube'],
         preferredEngine: 'google',
-        weatherLocation: 'Mumbai,IN',
+        weatherLocation: 'New York,NY,US',
         openWeatherApiKey: '',
-        waqiApiKey: ''
+        waqiApiKey: '',
+        linkBehavior: 'same',
+        showKeyboardHints: 'true',
+        footerLeft: 'blank',
+        footerCenter: 'blank',
+        footerRight: 'quotes',
+        socialLinks: []
     };
     
     return {
         userName: localStorage.getItem('userName') ??  defaults.userName,
+        colorScheme: localStorage.getItem('colorScheme') ?? defaults.colorScheme,
         theme: localStorage.getItem('theme') ?? defaults.theme,
         colorMode: localStorage.getItem('colorMode') ?? defaults.colorMode,
         timeFormat: localStorage.getItem('timeFormat') ?? defaults.timeFormat,
+        showSeconds: localStorage.getItem('showSeconds') ?? defaults.showSeconds,
         tempUnit: localStorage.getItem('tempUnit') ?? defaults.tempUnit,
         showQuotes: localStorage.getItem('showQuotes') ?? defaults.showQuotes,
         enabledEngines: JSON.parse(localStorage.getItem('enabledEngines')) ?? defaults.enabledEngines,
         preferredEngine: localStorage.getItem('preferredEngine') ?? defaults.preferredEngine,
         weatherLocation: localStorage.getItem('weatherLocation') ?? defaults.weatherLocation,
         openWeatherApiKey: localStorage.getItem('openWeatherApiKey') ??  defaults.openWeatherApiKey,
-        waqiApiKey: localStorage.getItem('waqiApiKey') ?? defaults.waqiApiKey
+        waqiApiKey: localStorage.getItem('waqiApiKey') ?? defaults.waqiApiKey,
+        linkBehavior: localStorage.getItem('linkBehavior') ?? defaults.linkBehavior,
+        showKeyboardHints: localStorage.getItem('showKeyboardHints') ?? defaults.showKeyboardHints,
+        footerLeft: localStorage.getItem('footerLeft') ?? defaults.footerLeft,
+        footerCenter: localStorage.getItem('footerCenter') ?? defaults.footerCenter,
+        footerRight: localStorage.getItem('footerRight') ?? defaults.footerRight,
+        socialLinks: JSON.parse(localStorage.getItem('socialLinks')) ?? defaults.socialLinks
     };
 }
 
@@ -143,21 +181,23 @@ function saveSettings(key, value) {
 
 function loadCategories() {
     const saved = localStorage.getItem('categories');
-    if (!saved) return [...defaultCategories];
-    
-    // Migrate old HTML format to simple class format
-    const cats = JSON.parse(saved);
+    let cats;
+    if (!saved) {
+        cats = JSON.parse(JSON.stringify(defaultCategories));
+    } else {
+        cats = JSON.parse(saved);
+    }
+
+    // Migrate old HTML format to simple class format and ensure visibility flag
     return cats.map(cat => {
         // Check if icon is in old HTML format
-        if (cat.icon && cat.icon.includes('<i class="')) {
+        if (cat.icon && typeof cat.icon === 'string' && cat.icon.includes('<i class="')) {
             const match = cat.icon.match(/class="([^"]+)"/);
             if (match) {
                 cat.icon = match[1];
             }
         }
-        // ensure new fields exist
-        cat.pinned = typeof cat.pinned !== 'undefined' ? cat.pinned : false;
-        cat.hidden = typeof cat.hidden !== 'undefined' ? cat.hidden : false;
+        if (cat.visible === undefined) cat.visible = true;
         return cat;
     });
 }
@@ -168,15 +208,17 @@ function saveCategories(cats) {
 
 function loadLinks() {
     const saved = localStorage.getItem('links');
-    const base = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultLinks));
-    // ensure each link has hidden flag
-    Object.keys(base).forEach(catId => {
-        base[catId] = (base[catId] || []).map(link => ({
-            ...link,
-            hidden: typeof link.hidden !== 'undefined' ? link.hidden : false
-        }));
+    const lnks = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultLinks));
+
+    // Ensure each link has a visible flag (default true)
+    Object.keys(lnks).forEach(catId => {
+        lnks[catId] = lnks[catId].map(link => {
+            if (link.visible === undefined) link.visible = true;
+            return link;
+        });
     });
-    return base;
+
+    return lnks;
 }
 
 function saveLinks(lnks) {
@@ -188,53 +230,6 @@ let settings = loadSettings();
 let categories = loadCategories();
 let links = loadLinks();
 let currentEngine = settings.preferredEngine;
-// Search engines storage (migrates from settings.enabledEngines on first run)
-function loadSearchEngines() {
-    const saved = localStorage.getItem('searchEngines');
-    if (!saved) {
-        const arr = Object.keys(allSearchEngines).map(id => ({
-            id,
-            name: allSearchEngines[id].name,
-            url: allSearchEngines[id].url,
-            iconHtml: allSearchEngines[id].icon,
-            visible: settings.enabledEngines.includes(id)
-        }));
-        localStorage.setItem('searchEngines', JSON.stringify(arr));
-        return arr;
-    }
-    try {
-        return JSON.parse(saved);
-    } catch (err) {
-        console.error('Failed to parse saved searchEngines, rebuilding defaults', err);
-        return loadSearchEngines();
-    }
-}
-
-function saveSearchEngines(arr) {
-    localStorage.setItem('searchEngines', JSON.stringify(arr));
-    // keep enabledEngines in settings in sync
-    const enabled = arr.filter(e => e.visible).map(e => e.id);
-    if (enabled.length === 0) {
-        // ensure at least one engine remains enabled
-        enabled.push(arr[0]?.id || 'google');
-        const first = arr.find(a => a.id === enabled[0]);
-        if (first) first.visible = true;
-        localStorage.setItem('searchEngines', JSON.stringify(arr));
-    }
-    saveSettings('enabledEngines', enabled);
-}
-
-let searchEngines = loadSearchEngines();
-
-// Normalize pinned state: allow only one pinned category (keep first if multiple)
-(() => {
-    const pinned = categories.filter(c => c.pinned);
-    if (pinned.length > 1) {
-        const keep = pinned[0].id;
-        categories.forEach(c => c.pinned = (c.id === keep));
-        saveCategories(categories);
-    }
-})();
 
 // ========================================
 // Theme Management
@@ -245,20 +240,40 @@ function applyTheme(theme) {
     saveSettings('theme', theme);
 }
 
+function applyColorScheme(scheme) {
+    document.documentElement.setAttribute('data-scheme', scheme);
+    saveSettings('colorScheme', scheme);
+    // Update color mode visibility based on scheme
+    updateColorModeVisibility();
+}
+
+function updateColorModeVisibility() {
+    const colorModeItem = document.querySelector('[data-setting="colorMode"]')?.closest('.setting-item');
+    if (colorModeItem) {
+        // Hide color mode option for monochrome scheme
+        if (settings.colorScheme === 'monochrome') {
+            colorModeItem.style.display = 'none';
+        } else {
+            colorModeItem.style.display = 'flex';
+        }
+    }
+}
+
 function applyColorMode(mode) {
     document.documentElement.setAttribute('data-color-mode', mode);
     saveSettings('colorMode', mode);
     renderLinksGrid();
 }
 
-// Apply saved theme immediately
+// Apply saved theme and color scheme immediately
 applyTheme(settings.theme);
+applyColorScheme(settings.colorScheme);
 
 // ========================================
 // DOM Elements
 // ========================================
 
-let searchInput, timeElement, dateElement, greetingElement, weatherElement, linksGrid;
+let searchInput, timeElement, dateElement, greetingElement, weatherElement, quoteElement, linksGrid;
 
 // ========================================
 // Time & Date Functions
@@ -271,14 +286,23 @@ function updateDateTime() {
     
     let hours = now.getHours();
     const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
     let timeString;
     
     if (settings.timeFormat === '12') {
         const period = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12 || 12;
-        timeString = `${hours}:${minutes} ${period}`;
+        if (settings.showSeconds === 'true') {
+            timeString = `${hours}:${minutes}:${seconds} ${period}`;
+        } else {
+            timeString = `${hours}:${minutes} ${period}`;
+        }
     } else {
-        timeString = `${hours.toString().padStart(2, '0')}:${minutes}`;
+        if (settings.showSeconds === 'true') {
+            timeString = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+        } else {
+            timeString = `${hours.toString().padStart(2, '0')}:${minutes}`;
+        }
     }
     
     timeElement.textContent = timeString;
@@ -311,9 +335,7 @@ function updateGreeting(hour) {
     const userName = settings.userName;
     greetingElement.textContent = userName ? `${greeting}, ${userName}` : greeting;
     
-    const iconElement = document.getElementById('greeting-icon');
-    // Greeting icon is controlled by weather function now
-
+    // NOTE: greeting icon will be managed by weather updates (showing current weather icon)
 }
 
 // ========================================
@@ -322,20 +344,31 @@ function updateGreeting(hour) {
 
 function performSearch(query) {
     if (!query.trim()) return;
-    // Always open search results in a new tab
-    // prefer managed searchEngines (user-defined), fall back to built-in list
-    const managed = searchEngines.find(e => e.id === currentEngine);
-    const engine = managed || allSearchEngines[currentEngine];
-    if (!engine) return;
-    const searchUrl = (engine.url || '') + encodeURIComponent(query);
-    window.open(searchUrl, '_blank');
+    
+    // Use Chrome Search API if available (respects user's default search engine)
+    if (typeof chrome !== 'undefined' && chrome.search && chrome.search.query) {
+        chrome.search.query({
+            text: query,
+            disposition: 'CURRENT_TAB'
+        });
+    } else {
+        // Fallback for Firefox or when Chrome Search API is not available
+        const merged = getAllEnginesMerged();
+        const engine = merged[currentEngine] || merged[settings.preferredEngine];
+        if (!engine || !engine.url) {
+            console.warn('No search engine URL found for', currentEngine, engine);
+            return;
+        }
+
+        const searchUrl = engine.url + encodeURIComponent(query);
+        window.location.href = searchUrl;
+    }
 }
 
 function setSearchEngine(engine) {
-    // allow selecting engines defined in managed list or built-in list
-    const managed = searchEngines.find(e => e.id === engine && e.visible);
-    const builtin = allSearchEngines[engine] && settings.enabledEngines.includes(engine);
-    if (!managed && !builtin) return;
+    const merged = getAllEnginesMerged();
+    if (!merged[engine]) return;
+    if (!settings.enabledEngines.includes(engine)) return;
 
     currentEngine = engine;
     saveSettings('preferredEngine', engine);
@@ -344,26 +377,28 @@ function setSearchEngine(engine) {
         btn.classList.toggle('active', btn.dataset.engine === engine);
     });
 
-    const label = managed ? managed.name : (allSearchEngines[engine] ? allSearchEngines[engine].name : engine);
     if (searchInput) {
-        searchInput.placeholder = `Search ${label}... `;
+        searchInput.placeholder = `Search ${merged[engine].name}... `;
     }
 }
 
 function renderSearchEngines() {
     const container = document.querySelector('.search-engines');
     if (!container) return;
-
-    // Include visible managed engines even if they are custom (not present in allSearchEngines)
-    const visible = searchEngines.filter(e => e.visible && (allSearchEngines[e.id] || (e.url && e.url.length > 0)));
-    container.innerHTML = visible.map((engine, index) => `
-        <button class="engine ${engine.id === currentEngine ? 'active' : ''}" 
-                data-engine="${engine.id}" 
-                title="${engine.name} (${index + 1})">
-            ${engine.iconHtml}
-        </button>
-    `).join('');
-
+    
+    const merged = getAllEnginesMerged();
+    container.innerHTML = settings.enabledEngines.map((engineId, index) => {
+        const engine = merged[engineId];
+        if (!engine) return '';
+        return `
+            <button class="engine ${engineId === currentEngine ? 'active' : ''}" 
+                    data-engine="${engineId}" 
+                    title="${engine.name} (${index + 1})">
+                ${engine.icon}
+            </button>
+        `;
+    }). join('');
+    
     // Rebind click events
     container.querySelectorAll('.engine').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -371,16 +406,218 @@ function renderSearchEngines() {
             if (searchInput) searchInput.focus();
         });
     });
-
+    
     // Update keyboard hints
     updateKeyboardHints();
+}
+
+// --- Custom Search Engines (persisted) ---
+function loadCustomSearchEngines() {
+    try {
+        return JSON.parse(localStorage.getItem('customSearchEngines')) || {};
+    } catch (e) {
+        return {};
+    }
+}
+
+function saveCustomSearchEngines(obj) {
+    localStorage.setItem('customSearchEngines', JSON.stringify(obj));
+}
+
+function getAllEnginesMerged() {
+    const custom = loadCustomSearchEngines();
+    // Merge without mutating original. Custom entries override built-ins.
+    const merged = Object.assign({}, allSearchEngines);
+    Object.keys(custom || {}).forEach(key => {
+        const val = custom[key];
+        if (val && val.deleted) {
+            delete merged[key];
+        } else if (val) {
+            merged[key] = Object.assign({}, merged[key] || {}, val);
+        }
+    });
+    return merged;
+}
+
+function renderSearchEngineSettings() {
+    const container = document.getElementById('search-engine-options');
+    if (!container) return;
+
+    const merged = getAllEnginesMerged();
+    // Render as list items: checkbox (left), icon preview, icon HTML, name, url, actions
+    container.innerHTML = Object.keys(merged).map(id => {
+        const engine = merged[id];
+        const enabled = settings.enabledEngines.includes(id);
+        return `
+            <div class="engine-item" data-id="${id}">
+                <label class="social-checkbox engine-col-checkbox">
+                    <input type="checkbox" class="engine-visible-checkbox" data-engine="${id}" ${enabled ? 'checked' : ''}>
+                </label>
+                <span class="engine-icon-preview">${engine.icon || ''}</span>
+                <input class="engine-icon-input monospace" data-field="icon" value="${escapeHtml(engine.icon || '')}" />
+                <input class="engine-name-input" data-field="name" value="${escapeHtml(engine.name || '')}" />
+                <input class="engine-url-input" data-field="url" value="${escapeHtml(engine.url || '')}" />
+                <div class="engine-actions">
+                    <button class="engine-delete" title="Delete engine"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Bind events for the new layout
+    container.querySelectorAll('.engine-item').forEach(item => {
+        const id = item.dataset.id;
+        const isCustom = !!loadCustomSearchEngines()[id];
+
+        // Inputs
+        const iconInput = item.querySelector('.engine-icon-input');
+        const nameInput = item.querySelector('.engine-name-input');
+        const urlInput = item.querySelector('.engine-url-input');
+
+        const saveCustom = () => {
+            const custom = loadCustomSearchEngines();
+            custom[id] = custom[id] || {};
+            if (iconInput) custom[id].icon = iconInput.value;
+            if (nameInput) custom[id].name = nameInput.value;
+            if (urlInput) custom[id].url = urlInput.value;
+            saveCustomSearchEngines(custom);
+            renderSearchEngines();
+        };
+
+        // Allow editing for all engines: save overrides to custom store
+        [iconInput, nameInput, urlInput].forEach(el => { if (el) el.addEventListener('input', saveCustom); });
+
+        // Visibility checkbox
+        const visCheckbox = item.querySelector('.engine-visible-checkbox');
+        if (visCheckbox) {
+            visCheckbox.addEventListener('change', (e) => {
+                const enabled = settings.enabledEngines || [];
+                const idx = enabled.indexOf(id);
+                if (e.target.checked && idx === -1) {
+                    enabled.push(id);
+                } else if (!e.target.checked && idx !== -1) {
+                    if (enabled.length <= 1) {
+                        showNotification('At least one engine must remain enabled', 'error');
+                        // revert
+                        e.target.checked = true;
+                        return;
+                    }
+                    enabled.splice(idx,1);
+                }
+                saveSettings('enabledEngines', enabled);
+                renderSearchEngineSettings();
+                renderSearchEngines();
+            });
+        }
+
+        // Delete for all engines: mark as deleted in custom store (so built-ins can be removed)
+        const delBtn = item.querySelector('.engine-delete');
+        if (delBtn) {
+            delBtn.addEventListener('click', () => {
+                const custom = loadCustomSearchEngines();
+                custom[id] = custom[id] || {};
+                custom[id].deleted = true;
+                saveCustomSearchEngines(custom);
+                // remove from enabled list
+                const enabled = (settings.enabledEngines || []).filter(e => e !== id);
+                if (enabled.length === 0) {
+                    showNotification('At least one engine must remain enabled', 'error');
+                    return;
+                }
+                saveSettings('enabledEngines', enabled);
+                renderSearchEngineSettings();
+                renderSearchEngines();
+                showNotification('Engine removed', 'success');
+            });
+        }
+    });
+
+    // Add engine form handling (keeps previous behavior)
+    const addBtn = document.getElementById('add-engine-btn');
+    if (addBtn) {
+        addBtn.onclick = (e) => {
+            e.preventDefault();
+            const id = (document.getElementById('new-engine-id')||{}).value?.trim();
+            const name = (document.getElementById('new-engine-name')||{}).value?.trim();
+            const url = (document.getElementById('new-engine-url')||{}).value?.trim();
+            const icon = (document.getElementById('new-engine-icon')||{}).value?.trim() || '<i class="fa-solid fa-magnifying-glass"></i>';
+            if (!id || !name || !url) {
+                showNotification('Please provide id, name and url for the engine', 'error');
+                return;
+            }
+            const existingCustom = loadCustomSearchEngines();
+            if (allSearchEngines[id] || existingCustom[id]) {
+                showNotification('Engine id already exists', 'error');
+                return;
+            }
+            existingCustom[id] = { name, url, icon };
+            saveCustomSearchEngines(existingCustom);
+            // enable it by default
+            const enabled = Array.from(settings.enabledEngines || []);
+            enabled.push(id);
+            saveSettings('enabledEngines', enabled);
+            renderSearchEngineSettings();
+            renderSearchEngines();
+            showNotification('Engine added', 'success');
+            // clear form
+            ['new-engine-id','new-engine-name','new-engine-url','new-engine-icon'].forEach(k=>{const el=document.getElementById(k); if(el)el.value='';});
+        };
+    }
+    // Ensure the add-engine toggle works while this panel is active (bind once)
+    try {
+        const toggleAdd = document.getElementById('toggle-add-engine');
+        const addContainer = document.getElementById('add-engine-container');
+        if (toggleAdd && addContainer && !toggleAdd.dataset.bound) {
+            // Previously this revealed inputs; keep the element but change behavior
+            toggleAdd.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Add a placeholder engine row directly (like Categories/Links)
+                addSearchEnginePlaceholder();
+            });
+            toggleAdd.dataset.bound = 'true';
+        }
+    } catch (e) {
+        console.error('Error binding add-engine toggle', e);
+    }
+}
+
+// Add a new placeholder search engine row (similar UX to Categories/Links)
+function addSearchEnginePlaceholder() {
+    const id = 'se_' + Date.now();
+    const custom = loadCustomSearchEngines();
+    // default placeholder values
+    custom[id] = {
+        name: 'New Search Engine',
+        url: 'https://',
+        icon: '<i class="fa-solid fa-magnifying-glass"></i>'
+    };
+    saveCustomSearchEngines(custom);
+    // enable by default
+    const enabled = Array.from(settings.enabledEngines || []);
+    enabled.push(id);
+    saveSettings('enabledEngines', enabled);
+    // re-render and focus the name input of the newly added row
+    renderSearchEngineSettings();
+    renderSearchEngines();
+    setTimeout(() => {
+        const nameInput = document.querySelector(`.engine-item[data-id="${id}"] .engine-name-input`);
+        if (nameInput) nameInput.focus();
+    }, 50);
 }
 
 function updateKeyboardHints() {
     const hintsContainer = document. querySelector('.keyboard-hints');
     if (!hintsContainer) return;
     
-    const engineCount = searchEngines.filter(e => e.visible).length;
+    // Show or hide keyboard hints based on setting
+    if (settings.showKeyboardHints === 'false') {
+        hintsContainer.style.display = 'none';
+        return;
+    } else {
+        hintsContainer.style.display = 'flex';
+    }
+    
+    const engineCount = settings.enabledEngines.length;
     const engineHint = engineCount > 1 ? `<kbd>1-${engineCount}</kbd> Engine` : '';
     
     hintsContainer.innerHTML = `
@@ -405,8 +642,18 @@ async function updateWeather() {
     }
 
     let query = `q=${encodeURIComponent(settings.weatherLocation)}`;
-
-    // use city name:
+    // Optionally, use geolocation:
+    // if ('geolocation' in navigator) {
+    //     navigator.geolocation. getCurrentPosition(pos => {
+    //         query = `lat=${pos.coords. latitude}&lon=${pos.coords.longitude}`;
+    //         fetchWeather(query);
+    //     }, () => {
+    //         fetchWeather(query);
+    //     });
+    // } else {
+    //     fetchWeather(query);
+    // }
+    // For now, just use city name:
     fetchWeather(query);
 }
 
@@ -427,24 +674,39 @@ async function fetchWeather(query) {
         // Get temperature, condition, and icon info
         const temp = Math.round(data.main.temp);
         const condition = data.weather[0].main; // e.g., "Clouds"
+        const cityName = data.name || settings.weatherLocation;
         const iconCode = data.weather[0].icon;
         const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
         const tempUnit = unit === 'metric' ? '°C' : '°F';
         
-        // Set greeting icon to weather image
-        const greetingIcon = document.getElementById('greeting-icon');
-        if (greetingIcon) {
-            greetingIcon.innerHTML = `<img src="${iconUrl}" alt="" style="width:2em;height:2em;margin:-0.25em 0;vertical-align:middle;">`;
+        // Get the parent widget and find the icon element
+        const widgetElement = weatherElement.parentElement;
+        if (widgetElement) {
+            const iconElement = widgetElement.querySelector('.widget-icon');
+            if (iconElement) {
+                // Show OpenWeather icon
+                iconElement.innerHTML = `<img src="${iconUrl}" alt="" style="width:2em;height:2em;margin:-0.25em 0;vertical-align:middle;">`;
+            }
         }
         
-        // Show city name before the weather text
-        const cityName = data.name || settings.weatherLocation.split(',')[0];
-        // Try to fetch AQI (WAQI preferred, then OpenWeather air pollution as fallback)
-        const lat = data.coord && data.coord.lat;
-        const lon = data.coord && data.coord.lon;
-        const aqiSuffix = await fetchAQI({ lat, lon });
-        weatherElement.textContent = `${cityName}, ${temp}${tempUnit} ${condition}${aqiSuffix}`;
+        weatherElement.textContent = `${cityName}, ${temp}${tempUnit} ${condition}`;
+        // Also update greeting icon to use the weather icon
+        const greetingIcon = document.getElementById('greeting-icon');
+        if (greetingIcon && widgetElement) {
+            const iconElement = widgetElement.querySelector('.widget-icon');
+            if (iconElement) greetingIcon.innerHTML = iconElement.innerHTML;
+        }
+
+        // Try to fetch AQI and append if available (use geo coords if possible)
+        try {
+            const aqiData = await fetchAQI({ lat: data.coord?.lat, lon: data.coord?.lon, city: cityName });
+            if (aqiData && typeof aqiData.aqi === 'number') {
+                weatherElement.textContent = `${weatherElement.textContent} | ${aqiData.aqi} AQI`;
+            }
+        } catch (err) {
+            // ignore AQI errors
+        }
     } catch (err) {
         console.error('Weather fetch error:', err);
         // Fall back to mock weather on error
@@ -452,7 +714,41 @@ async function fetchWeather(query) {
     }
 }
 
-async function showMockWeather() {
+// Fetch AQI data from WAQI (uses settings.waqiApiKey)
+async function fetchAQI(location) {
+    if (!settings.waqiApiKey || !location) return null;
+    try {
+        let url;
+        // Allow passing coords object {lat,lon} or a city string
+        if (typeof location === 'object' && location.lat && location.lon) {
+            url = `https://api.waqi.info/feed/geo:${location.lat};${location.lon}/?token=${encodeURIComponent(settings.waqiApiKey)}`;
+        } else if (typeof location === 'object' && location.city) {
+            url = `https://api.waqi.info/feed/${encodeURIComponent(location.city)}/?token=${encodeURIComponent(settings.waqiApiKey)}`;
+        } else {
+            url = `https://api.waqi.info/feed/${encodeURIComponent(location)}/?token=${encodeURIComponent(settings.waqiApiKey)}`;
+        }
+
+        console.debug('WAQI request URL:', url);
+        const resp = await fetch(url);
+        if (!resp.ok) return null;
+        const data = await resp.json();
+        if (data && data.status && data.status !== 'ok') {
+            console.warn('WAQI API returned non-ok status:', data.status, data);
+        }
+        if (data && data.status === 'ok' && data.data) {
+            return {
+                aqi: data.data.aqi,
+                dominentpol: data.data.dominentpol,
+                city: data.data.city && data.data.city.name
+            };
+        }
+    } catch (e) {
+        console.error('AQI fetch error', e);
+    }
+    return null;
+}
+
+function showMockWeather() {
     if (!weatherElement) return;
     
     const mockWeatherData = [
@@ -477,204 +773,234 @@ async function showMockWeather() {
         unit = '°F';
     }
     
-    const mockLocation = (settings.weatherLocation || '').split(',')[0] || 'Unknown';
-    // Try to fetch AQI by city name when showing mock data
-    let aqiSuffix = '';
-    if (settings.waqiApiKey) {
-        aqiSuffix = await fetchAQI({ city: mockLocation });
-    }
-    weatherElement.textContent = `${mockLocation}, ${temp}${unit} ${weather.condition}${aqiSuffix}`;
+    weatherElement.textContent = `${temp}${unit} ${weather.condition}`;
     
-    // Set greeting icon to the mock weather icon
-    const greetingIcon = document.getElementById('greeting-icon');
-    if (greetingIcon) {
-        greetingIcon.innerHTML = `<i class="fa-solid ${weather.icon}"></i>`;
+    // Get the parent widget and find the icon element
+    const widgetElement = weatherElement.parentElement;
+    if (widgetElement) {
+        const iconElement = widgetElement.querySelector('.widget-icon');
+        if (iconElement) {
+            iconElement.innerHTML = `<i class="fa-solid ${weather.icon}"></i>`;
+        }
+        // Mirror icon into greeting icon
+        const greetingIcon = document.getElementById('greeting-icon');
+        if (greetingIcon) {
+            const iconElement = widgetElement.querySelector('.widget-icon');
+            if (iconElement) greetingIcon.innerHTML = iconElement.innerHTML;
+        }
     }
 }
 
 // ========================================
-// AQI Fetching (WAQI preferred, OpenWeather fallback)
+// Quotes Function
 // ========================================
-async function fetchAQI({ lat, lon, city } = {}) {
-    try {
-        // Try WAQI first if token present
-        if (settings.waqiApiKey) {
-            let waqiUrl = '';
-            if (typeof lat !== 'undefined' && typeof lon !== 'undefined') {
-                waqiUrl = `https://api.waqi.info/feed/geo:${lat};${lon}/?token=${settings.waqiApiKey}`;
-            } else if (city) {
-                waqiUrl = `https://api.waqi.info/feed/${encodeURIComponent(city)}/?token=${settings.waqiApiKey}`;
-            }
 
-            if (waqiUrl) {
-                const resp = await fetch(waqiUrl);
-                if (resp.ok) {
-                    const body = await resp.json();
-                    if (body && body.status === 'ok' && body.data && typeof body.data.aqi !== 'undefined') {
-                        const aqi = body.data.aqi;
-                        return ` | ${aqi} AQI`;
-                    }
-                }
-            }
-        }
+const quotes = [
+    '"The only way to do great work is to love what you do." - Steve Jobs',
+    '"First, solve the problem.  Then, write the code." - John Johnson',
+    '"Simplicity is the soul of efficiency." - Austin Freeman',
+    '"Make it work, make it right, make it fast." - Kent Beck',
+    '"Talk is cheap. Show me the code." - Linus Torvalds',
+    '"Creativity is intelligence having fun." - Albert Einstein',
+    '"Done is better than perfect." - Sheryl Sandberg',
+    '"Stay hungry, stay foolish." - Steve Jobs',
+    '"Code is like humor. When you have to explain it, it\'s bad." - Cory House',
+];
 
-        // Fallback: use OpenWeather Air Pollution API if we have coordinates and OpenWeather key
-        if (settings.openWeatherApiKey && typeof lat !== 'undefined' && typeof lon !== 'undefined') {
-            const resp = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${settings.openWeatherApiKey}`);
-            if (resp.ok) {
-                const body = await resp.json();
-                if (body && body.list && body.list[0] && body.list[0].main && typeof body.list[0].main.aqi !== 'undefined') {
-                    const aqiIndex = body.list[0].main.aqi; // 1-5
-                    const labels = {
-                        1: 'Good',
-                        2: 'Fair',
-                        3: 'Moderate',
-                        4: 'Poor',
-                        5: 'Very Poor'
-                    };
-                    const label = labels[aqiIndex] || 'Unknown';
-                    return ` | ${label} (${aqiIndex}) AQI`;
-                }
-            }
-        }
-
-    } catch (err) {
-        console.error('AQI fetch error:', err);
+function updateQuote() {
+    const quoteWidget = document.querySelector('.quote-widget');
+    if (!quoteWidget || !quoteElement) return;
+    
+    if (settings.showQuotes === 'true') {
+        quoteWidget.style.display = 'flex';
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        quoteElement.textContent = randomQuote;
+    } else {
+        quoteWidget.style.display = 'none';
     }
-
-    // Nothing available
-    return '';
 }
 
 // ========================================
+// Social Links Functions
+// ========================================
+
+function renderSocialLinks() {
+    // Get or create social links container
+    let socialWidget = document.querySelector('.social-widget');
+    
+    if (!socialWidget) {
+        socialWidget = document.createElement('div');
+        socialWidget.className = 'widget social-widget';
+        socialWidget.innerHTML = '<div class="social-icons"></div>';
+    }
+    
+    const iconsContainer = socialWidget.querySelector('.social-icons');
+    if (!iconsContainer) return;
+    
+    // Filter visible social links
+    const visibleLinks = settings.socialLinks.filter(link => link.visible && link.url);
+    
+    if (visibleLinks.length > 0) {
+        const target = settings.linkBehavior === 'new-tab' ? '_blank' : (settings.linkBehavior === 'new-window' ? '_blank' : '_self');
+        iconsContainer.innerHTML = visibleLinks.map(link => {
+            return `<a href="${link.url}" target="${target}" title="${link.name}" class="social-icon" data-link-behavior="${settings.linkBehavior}"><i class="${link.icon}"></i></a>`;
+        }).join('');
+        
+        // Add click handlers for social links
+        iconsContainer.querySelectorAll('.social-icon').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const behavior = this.getAttribute('data-link-behavior');
+                if (behavior === 'new-tab' || behavior === 'new-window') {
+                    e.preventDefault();
+                    window.open(this.href, '_blank', 'noopener,noreferrer');
+                }
+            });
+        });
+    } else {
+        iconsContainer.innerHTML = '';
+    }
+    
+    return socialWidget;
+}
+
+// ========================================
+// Footer Management
+// ========================================
+
+function updateFooter() {
+    const footer = document.querySelector('.footer');
+    if (!footer) return;
+    
+    // Clear existing content
+    footer.innerHTML = '';
+    
+    // Create sections based on settings
+    const sections = [
+        { position: 'left', setting: settings.footerLeft },
+        { position: 'center', setting: settings.footerCenter },
+        { position: 'right', setting: settings.footerRight }
+    ];
+    
+    sections.forEach(section => {
+        const widget = createFooterWidget(section.setting);
+        if (widget) {
+            widget.style.flex = section.position === 'center' ? '1' : 'initial';
+            widget.style.justifyContent = section.position === 'center' ? 'center' : (section.position === 'right' ? 'flex-end' : 'flex-start');
+            footer.appendChild(widget);
+        }
+    });
+
+    // Hide footer if no widgets were added
+    if (!footer.hasChildNodes()) {
+        footer.style.display = 'none';
+    } else {
+        footer.style.display = '';
+    }
+}
+
+function createFooterWidget(type) {
+    if (type === 'blank') return null;
+    
+    if (type === 'weather') {
+        // If a weather widget already exists (e.g., header), do not create another in footer
+        if (document.getElementById('weather')) return null;
+        const widget = document.createElement('div');
+        widget.className = 'widget weather-widget';
+        widget.innerHTML = `
+            <span class="widget-icon"><i class="fa-solid fa-cloud-sun"></i></span>
+            <span class="widget-text" id="weather">Loading...</span>
+        `;
+        // Reassign weatherElement
+        setTimeout(() => {
+            weatherElement = document.getElementById('weather');
+            updateWeather();
+        }, 0);
+        return widget;
+    }
+    
+    if (type === 'quotes') {
+        const widget = document.createElement('div');
+        widget.className = 'widget quote-widget';
+        widget.innerHTML = `
+            <span class="widget-icon"><i class="fa-solid fa-quote-left"></i></span>
+            <span class="widget-text" id="quote">"The only way to do great work is to love what you do."</span>
+        `;
+        // Reassign quoteElement
+        setTimeout(() => {
+            quoteElement = document.getElementById('quote');
+            updateQuote();
+        }, 0);
+        return widget;
+    }
+    
+    if (type === 'socials') {
+        return renderSocialLinks();
+    }
+    
+    return null;
+}
+
 // ========================================
 // Links Grid Rendering
 // ========================================
 
 function renderLinksGrid() {
     if (!linksGrid) return;
-
+    
     const colorMode = settings.colorMode;
-
-    // Build visible category list, honoring pinned and hidden
-    const visibleCategories = categories.filter(c => !c.hidden);
-
-    // Find pinned category (first one that's not hidden)
-    const pinned = visibleCategories.find(c => c.pinned) || null;
-
-    // If pinned exists, render it in its own top area and render others in the grid below
-    if (pinned) {
-        const others = visibleCategories.filter(c => c.id !== pinned.id);
-
-        // Render pinned section
-        const pinnedHtml = (() => {
-            const category = pinned;
-            const allCategoryLinks = links[category.id] || [];
-            const categoryLinks = allCategoryLinks.filter(l => !l.hidden);
-            const colorClass = colorMode === 'multi' ? categoryColors[0 % categoryColors.length] : 'mauve';
-            return `
-                <section class="link-group pinned" data-category="${category.id}" data-color="${colorClass}">
-                    <h2 class="group-title">
-                        <span class="title-icon"><i class="${category.icon}"></i></span>
-                        ${category.name}
-                    </h2>
-                    <div class="links">
-                        ${categoryLinks.map(link => `
-                            <a href="${link.url}" class="link-card" target="_blank" rel="noopener noreferrer">
-                                <span class="link-icon"><i class="${link.icon || 'fa-solid fa-link'}"></i></span>
-                                <span class="link-text">${link.name}</span>
-                            </a>
-                        `).join('')}
-                    </div>
-                </section>
-            `;
-        })();
-
-        // Render others inside an inner grid container so layout can differ
-        const othersHtml = others.map((category, idx) => {
-            const allCategoryLinks = links[category.id] || [];
-            const categoryLinks = allCategoryLinks.filter(l => !l.hidden);
-            const colorClass = colorMode === 'multi' ? categoryColors[(idx+1) % categoryColors.length] : 'mauve';
-
-            return `
-                <section class="link-group" data-category="${category.id}" data-color="${colorClass}">
-                    <h2 class="group-title">
-                        <span class="title-icon"><i class="${category.icon}"></i></span>
-                        ${category.name}
-                    </h2>
-                    <div class="links">
-                        ${categoryLinks.map(link => `
-                            <a href="${link.url}" class="link-card" target="_blank" rel="noopener noreferrer">
-                                <span class="link-icon"><i class="${link.icon || 'fa-solid fa-link'}"></i></span>
-                                <span class="link-text">${link.name}</span>
-                            </a>
-                        `).join('')}
-                    </div>
-                </section>
-            `;
-        }).join('');
-
-        linksGrid.classList.add('has-pinned');
-        linksGrid.innerHTML = `<div class="pinned-section">${pinnedHtml}</div><div class="others-section">${othersHtml}</div>`;
-    } else {
-        // No pinned category, render normally
-        linksGrid.classList.remove('has-pinned');
-        linksGrid.innerHTML = visibleCategories.map((category, index) => {
-            const allCategoryLinks = links[category.id] || [];
-            // only show links that are not hidden
-            const categoryLinks = allCategoryLinks.filter(l => !l.hidden);
-            const colorClass = colorMode === 'multi' ? categoryColors[index % categoryColors.length] : 'mauve';
-
-            return `
-                <section class="link-group" data-category="${category.id}" data-color="${colorClass}">
-                    <h2 class="group-title">
-                        <span class="title-icon"><i class="${category.icon}"></i></span>
-                        ${category.name}
-                    </h2>
-                    <div class="links">
-                        ${categoryLinks.map(link => `
-                            <a href="${link.url}" class="link-card" target="_blank" rel="noopener noreferrer">
-                                <span class="link-icon"><i class="${link.icon || 'fa-solid fa-link'}"></i></span>
-                                <span class="link-text">${link.name}</span>
-                            </a>
-                        `).join('')}
-                    </div>
-                </section>
-            `;
-        }).join('');
-    }
-
+    const linkTarget = settings.linkBehavior === 'new-tab' ? '_blank' : (settings.linkBehavior === 'new-window' ? '_blank' : '_self');
+    
+    const visibleCategories = categories.filter(c => c.visible !== false);
+    linksGrid.innerHTML = visibleCategories.map((category, index) => {
+        const categoryLinks = (links[category.id] || []).filter(l => l.visible !== false);
+        const colorClass = colorMode === 'multi' ? categoryColors[index % categoryColors.length] : 'mauve';
+        
+        return `
+            <section class="link-group" data-category="${category.id}" data-color="${colorClass}">
+                <h2 class="group-title">
+                    <span class="title-icon"><i class="${category.icon}"></i></span>
+                    ${category.name}
+                </h2>
+                <div class="links">
+                    ${categoryLinks.map(link => `
+                        <a href="${link.url}" class="link-card" target="${linkTarget}" data-link-behavior="${settings.linkBehavior}">
+                            <span class="link-icon"><i class="${link.icon || 'fa-solid fa-link'}"></i></span>
+                            <span class="link-text">${link.name}</span>
+                        </a>
+                    `).join('')}
+                </div>
+            </section>
+        `;
+    }).join('');
+    
+    // Add click handlers for link behavior
+    document.querySelectorAll('.link-card').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const behavior = this.getAttribute('data-link-behavior');
+            if (behavior === 'new-tab' || behavior === 'new-window') {
+                e.preventDefault();
+                window.open(this.href, '_blank', 'noopener,noreferrer');
+            }
+            // 'same' uses target="_self" (default browser behavior)
+        });
+    });
+    
     updateGridLayout();
 }
 
 function updateGridLayout() {
     if (!linksGrid) return;
-    if (linksGrid.classList.contains('has-pinned')) {
-        // Count others (excluding pinned)
-        const visibleCount = categories.filter(c => !c.hidden).length;
-        const others = Math.max(0, visibleCount - 1);
-
-        linksGrid.classList.remove('grid-single', 'grid-even', 'grid-odd');
-        if (others <= 1) {
-            linksGrid.classList.add('grid-single');
-        } else if (others % 2 === 0) {
-            linksGrid.classList.add('grid-even');
-        } else {
-            linksGrid.classList.add('grid-odd');
-        }
+    
+    const categoryCount = categories.filter(c => c.visible !== false).length;
+    
+    linksGrid.classList.remove('grid-single', 'grid-even', 'grid-odd');
+    
+    if (categoryCount === 1) {
+        linksGrid. classList.add('grid-single');
+    } else if (categoryCount % 2 === 0) {
+        linksGrid.classList.add('grid-even');
     } else {
-        // Use visible categories count for layout decisions
-        const visibleCount = categories.filter(c => !c.hidden).length;
-
-        linksGrid.classList.remove('grid-single', 'grid-even', 'grid-odd');
-
-        if (visibleCount === 1) {
-            linksGrid.classList.add('grid-single');
-        } else if (visibleCount % 2 === 0) {
-            linksGrid.classList.add('grid-even');
-        } else {
-            linksGrid.classList.add('grid-odd');
-        }
+        linksGrid.classList. add('grid-odd');
     }
 }
 
@@ -687,16 +1013,13 @@ function initSettings() {
     const settingsOverlay = document.getElementById('settings-overlay');
     const settingsClose = document.getElementById('settings-close');
     
-    // Help modal elements
-    const helpBtn = document.getElementById('help-btn');
-    const helpOverlay = document.getElementById('help-overlay');
-    const helpClose = document.getElementById('help-close');
-    
     if (!settingsBtn || !settingsOverlay || !settingsClose) return;
     
     // Open settings
     settingsBtn.addEventListener('click', () => {
         settingsOverlay.classList.add('active');
+        // Ensure search engines settings are rendered before populating values
+        renderSearchEngineSettings();
         populateSettingsUI();
     });
     
@@ -712,31 +1035,11 @@ function initSettings() {
         }
     });
     
-    // Help modal
-    if (helpBtn && helpOverlay && helpClose) {
-        helpBtn.addEventListener('click', () => {
-            helpOverlay.classList.add('active');
-        });
-        
-        helpClose.addEventListener('click', () => {
-            helpOverlay.classList.remove('active');
-        });
-        
-        helpOverlay.addEventListener('click', (e) => {
-            if (e.target === helpOverlay) {
-                helpOverlay.classList.remove('active');
-            }
-        });
-    }
-    
     // Close on Escape key
     document. addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             if (settingsOverlay.classList. contains('active')) {
                 settingsOverlay.classList.remove('active');
-            }
-            if (helpOverlay && helpOverlay.classList.contains('active')) {
-                helpOverlay.classList.remove('active');
             }
         }
     });
@@ -754,10 +1057,16 @@ function initSettings() {
             
             if (tabId === 'categories') {
                 renderCategoriesSettings();
-                    } else if (tabId === 'search-engines') {
-                        renderSearchEnginesSettings();
             } else if (tabId === 'links') {
                 renderLinksSettings();
+            } else if (tabId === 'social') {
+                renderSocialLinksSettings();
+            } else if (tabId === 'footer') {
+                renderFooterSettings();
+            } else if (tabId === 'search-engines') {
+                renderSearchEngineSettings();
+            } else if (tabId === 'help') {
+                // Help tab - content is static in HTML
             }
         });
     });
@@ -765,20 +1074,32 @@ function initSettings() {
     // Toggle button handlers
     document.querySelectorAll('.toggle-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const setting = btn.dataset.setting;
+            const setting = btn.dataset. setting;
             const value = btn.dataset.value;
-
+            
             saveSettings(setting, value);
             updateToggleStates();
-
-            if (setting === 'theme') {
+            
+            if (setting === 'colorScheme') {
+                applyColorScheme(value);
+            } else if (setting === 'theme') {
                 applyTheme(value);
             } else if (setting === 'colorMode') {
                 applyColorMode(value);
             } else if (setting === 'timeFormat') {
                 updateDateTime();
+            } else if (setting === 'showSeconds') {
+                updateDateTime();
             } else if (setting === 'tempUnit') {
                 updateWeather();
+            } else if (setting === 'showQuotes') {
+                updateQuote();
+            } else if (setting === 'linkBehavior') {
+                renderLinksGrid();
+            } else if (setting === 'showKeyboardHints') {
+                updateKeyboardHints();
+            } else if (setting === 'footerLeft' || setting === 'footerCenter' || setting === 'footerRight') {
+                updateFooter();
             }
         });
     });
@@ -789,6 +1110,14 @@ function initSettings() {
         nameInput.addEventListener('input', (e) => {
             saveSettings('userName', e.target.value);
             updateGreeting(new Date().getHours());
+        });
+    }
+    
+    // Color scheme dropdown handler
+    const colorSchemeSelect = document.getElementById('color-scheme-select');
+    if (colorSchemeSelect) {
+        colorSchemeSelect.addEventListener('change', (e) => {
+            applyColorScheme(e.target.value);
         });
     }
     
@@ -819,69 +1148,18 @@ function initSettings() {
     }
 
     // WAQI API key input handler
-    const waqiInput = document.getElementById('setting-waqi-api-key');
-    if (waqiInput) {
-        waqiInput.addEventListener('input', (e) => {
+    const waqiKeyInput = document.getElementById('setting-waqi-api-key');
+    if (waqiKeyInput) {
+        waqiKeyInput.addEventListener('input', (e) => {
             saveSettings('waqiApiKey', e.target.value.trim());
         });
 
-        waqiInput.addEventListener('blur', () => {
+        waqiKeyInput.addEventListener('blur', () => {
             updateWeather();
         });
     }
     
-    // Search engine checkboxes
-    document.querySelectorAll('#search-engine-options input').forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            const enabledEngines = [];
-            document.querySelectorAll('#search-engine-options input:checked').forEach(cb => {
-                enabledEngines.push(cb.dataset.engine);
-            });
-            
-            if (enabledEngines.length === 0) {
-                checkbox.checked = true;
-                return;
-            }
-            
-            saveSettings('enabledEngines', enabledEngines);
-            
-            if (!enabledEngines.includes(currentEngine)) {
-                setSearchEngine(enabledEngines[0]);
-            }
-            
-            renderSearchEngines();
-        });
-    });
-
-    // Backup export/import handlers
-    const exportBtn = document.getElementById('export-backup-btn');
-    const importInput = document.getElementById('import-backup-input');
-    const importBtn = document.getElementById('import-backup-btn');
-
-    if (exportBtn) {
-        exportBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Open export options modal
-            const em = document.getElementById('export-options-modal');
-            if (em) {
-                em.classList.add('active');
-                em.setAttribute('aria-hidden', 'false');
-            }
-        });
-    }
-
-    if (importBtn && importInput) {
-        importBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            importInput.value = '';
-            importInput.click();
-        });
-
-        importInput.addEventListener('change', (e) => {
-            const file = e.target.files && e.target.files[0];
-            if (file) handleImportFile(file);
-        });
-    }
+    // Search engine checkboxes are handled by renderSearchEngineSettings()
     
     // Add category button
     const addCategoryBtn = document.getElementById('add-category-btn');
@@ -893,12 +1171,6 @@ function initSettings() {
     const addLinkBtn = document.getElementById('add-link-btn');
     if (addLinkBtn) {
         addLinkBtn.addEventListener('click', addLink);
-    }
-    
-    // Add search engine button
-    const addSearchEngineBtn = document.getElementById('add-search-engine-btn');
-    if (addSearchEngineBtn) {
-        addSearchEngineBtn.addEventListener('click', addSearchEngine);
     }
     
     // Category selector for links
@@ -923,6 +1195,12 @@ function populateSettingsUI() {
         nameInput.value = settings.userName;
     }
     
+    // Populate color scheme dropdown
+    const colorSchemeSelect = document.getElementById('color-scheme-select');
+    if (colorSchemeSelect) {
+        colorSchemeSelect.value = settings.colorScheme;
+    }
+    
     // Populate weather location input
     const locationInput = document.getElementById('setting-weather-location');
     if (locationInput) {
@@ -934,454 +1212,19 @@ function populateSettingsUI() {
     if (apiKeyInput) {
         apiKeyInput.value = settings.openWeatherApiKey;
     }
-
     // Populate WAQI API key input
-    const waqiInput = document.getElementById('setting-waqi-api-key');
-    if (waqiInput) {
-        waqiInput.value = settings.waqiApiKey || '';
+    const waqiKeyInput = document.getElementById('setting-waqi-api-key');
+    if (waqiKeyInput) {
+        waqiKeyInput.value = settings.waqiApiKey || '';
     }
     
-    // Render search engines settings panel if present
-    renderSearchEnginesSettings();
+    // Populate search engine checkboxes
+    document.querySelectorAll('#search-engine-options input').forEach(checkbox => {
+        checkbox.checked = settings.enabledEngines.includes(checkbox.dataset.engine);
+    });
     
     updateToggleStates();
 }
-
-// ========================================
-// Backup / Restore
-// ========================================
-
-function buildBackupObject() {
-    return {
-        meta: {
-            version: 1,
-            timestamp: new Date().toISOString(),
-            generatedBy: 'startpage'
-        },
-        settings: {
-            userName: settings.userName || '',
-            theme: settings.theme || 'dark',
-            colorMode: settings.colorMode || 'multi',
-            timeFormat: settings.timeFormat || '12',
-            tempUnit: settings.tempUnit || 'C',
-            enabledEngines: settings.enabledEngines || [],
-            preferredEngine: settings.preferredEngine || 'google',
-            weatherLocation: settings.weatherLocation || ''
-        },
-        categories: categories,
-        links: links,
-        searchEngines: searchEngines
-    };
-}
-
-function exportBackup() {
-    try {
-        const backup = buildBackupObject();
-        const json = JSON.stringify(backup, null, 2);
-        const now = new Date();
-        const pad = n => String(n).padStart(2, '0');
-        const filename = `startpage-backup-${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}.json`;
-
-        const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-    } catch (err) {
-        console.error('Export failed', err);
-        showResultModal('Export Failed', 'Failed to export backup. See console for details.');
-    }
-}
-
-// Export selected sections (used by export options modal)
-function exportSelectedSections({ settings: exSettings, categories: exCats, links: exLinks, searchEngines: exSearchEngines, includeKeys }) {
-    try {
-        const now = new Date();
-        const pad = n => String(n).padStart(2, '0');
-        const filename = `startpage-backup-${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}.json`;
-
-        const out = { meta: { version: 1, timestamp: new Date().toISOString(), generatedBy: 'startpage' } };
-
-        if (exSettings) {
-            out.settings = {
-                userName: settings.userName || '',
-                theme: settings.theme || 'dark',
-                colorMode: settings.colorMode || 'multi',
-                timeFormat: settings.timeFormat || '12',
-                tempUnit: settings.tempUnit || 'C',
-                enabledEngines: settings.enabledEngines || [],
-                preferredEngine: settings.preferredEngine || 'google',
-                weatherLocation: settings.weatherLocation || ''
-            };
-            if (includeKeys) {
-                out.settings.openWeatherApiKey = settings.openWeatherApiKey || '';
-                out.settings.waqiApiKey = settings.waqiApiKey || '';
-            }
-        }
-
-        if (exCats) {
-            out.categories = categories;
-        }
-
-        if (exLinks) {
-            out.links = links;
-        }
-        
-        if (exSearchEngines) {
-            out.searchEngines = searchEngines;
-        }
-
-        const json = JSON.stringify(out, null, 2);
-        const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-
-        // Close export modal silently (no alert)
-        const em = document.getElementById('export-options-modal');
-        if (em) { em.classList.remove('active'); em.setAttribute('aria-hidden', 'true'); }
-    } catch (err) {
-        console.error('Export selected failed', err);
-        showResultModal('Export Failed', 'Failed to export selected sections. See console for details.');
-    }
-}
-
-// Show a small result modal inside settings
-function showResultModal(title, message) {
-    const modal = document.getElementById('import-result-modal');
-    const titleEl = document.getElementById('import-result-title');
-    const msgEl = document.getElementById('import-result-message');
-    if (!modal) {
-        // Fallback to alert if modal missing
-        alert(message);
-        return;
-    }
-    titleEl.textContent = title || 'Result';
-    msgEl.textContent = message || '';
-    modal.classList.add('active');
-    modal.setAttribute('aria-hidden', 'false');
-}
-
-// Close handler for modal
-document.addEventListener('DOMContentLoaded', () => {
-    const closeBtn = document.getElementById('import-modal-close');
-    const modal = document.getElementById('import-result-modal');
-    if (closeBtn && modal) {
-        closeBtn.addEventListener('click', () => {
-            modal.classList.remove('active');
-            modal.setAttribute('aria-hidden', 'true');
-        });
-    }
-    
-    // Import confirm modal buttons
-    const importMergeBtn = document.getElementById('import-merge-btn');
-    const importReplaceBtn = document.getElementById('import-replace-btn');
-    const importCancelBtn = document.getElementById('import-cancel-btn');
-    const importConfirmModal = document.getElementById('import-confirm-modal');
-
-    if (importMergeBtn) {
-        importMergeBtn.addEventListener('click', () => {
-            if (window.__importCandidate) {
-                applyBackupMerge(window.__importCandidate);
-            }
-            if (importConfirmModal) { importConfirmModal.classList.remove('active'); importConfirmModal.setAttribute('aria-hidden', 'true'); }
-        });
-    }
-
-    if (importReplaceBtn) {
-        importReplaceBtn.addEventListener('click', () => {
-            if (window.__importCandidate) {
-                applyBackupReplace(window.__importCandidate);
-            }
-            if (importConfirmModal) { importConfirmModal.classList.remove('active'); importConfirmModal.setAttribute('aria-hidden', 'true'); }
-        });
-    }
-
-    if (importCancelBtn) {
-        importCancelBtn.addEventListener('click', () => {
-            if (importConfirmModal) { importConfirmModal.classList.remove('active'); importConfirmModal.setAttribute('aria-hidden', 'true'); }
-            window.__importCandidate = null;
-        });
-    }
-
-    // Export options modal buttons
-    const exportModal = document.getElementById('export-options-modal');
-    const exportCancelBtn = document.getElementById('export-cancel-btn');
-    const exportConfirmBtn = document.getElementById('export-confirm-btn');
-    if (exportCancelBtn) {
-        exportCancelBtn.addEventListener('click', () => {
-            if (exportModal) { exportModal.classList.remove('active'); exportModal.setAttribute('aria-hidden', 'true'); }
-        });
-    }
-
-    if (exportConfirmBtn) {
-        exportConfirmBtn.addEventListener('click', () => {
-            const exSettings = document.getElementById('exp-settings')?.checked;
-            const exCats = document.getElementById('exp-categories')?.checked;
-            const exLinks = document.getElementById('exp-links')?.checked;
-            const exSearchEngines = document.getElementById('exp-search-engines')?.checked;
-            const includeKeys = document.getElementById('exp-include-keys')?.checked;
-
-            if (!exSettings && !exCats && !exLinks && !exSearchEngines) {
-                showResultModal('Export Error', 'Please select at least one section to export.');
-                return;
-            }
-
-            exportSelectedSections({ settings: !!exSettings, categories: !!exCats, links: !!exLinks, searchEngines: !!exSearchEngines, includeKeys: !!includeKeys });
-        });
-    }
-});
-
-function applyBackupReplace(backup) {
-    try {
-        // Replace settings (but DO NOT overwrite API keys)
-        const s = backup.settings || {};
-        saveSettings('userName', s.userName || '');
-        saveSettings('theme', s.theme || 'dark');
-        saveSettings('colorMode', s.colorMode || 'multi');
-        saveSettings('timeFormat', s.timeFormat || '12');
-        saveSettings('tempUnit', s.tempUnit || 'C');
-        saveSettings('enabledEngines', s.enabledEngines || []);
-        saveSettings('preferredEngine', s.preferredEngine || (s.enabledEngines && s.enabledEngines[0]) || 'google');
-        saveSettings('weatherLocation', s.weatherLocation || '');
-
-        // Replace categories and links
-        categories = Array.isArray(backup.categories) ? backup.categories : [];
-        links = backup.links || {};
-        // Replace search engines if provided
-        if (Array.isArray(backup.searchEngines)) {
-            searchEngines = backup.searchEngines;
-            saveSearchEngines(searchEngines);
-        }
-
-        saveCategories(categories);
-        saveLinks(links);
-
-        // Re-render UI
-        renderCategoriesSettings();
-        renderLinksGrid();
-        renderSearchEngines();
-        renderSearchEnginesSettings();
-        populateSettingsUI();
-
-        showResultModal('Import Complete', 'Backup imported (replace).');
-    } catch (err) {
-        console.error('Apply replace failed', err);
-        showResultModal('Import Failed', 'Failed to apply backup. See console for details.');
-    }
-}
-
-function applyBackupMerge(backup) {
-    try {
-        const s = backup.settings || {};
-        // Merge simple settings (overwrite current with backup where present)
-        if (s.userName) saveSettings('userName', s.userName);
-        if (s.theme) saveSettings('theme', s.theme);
-        if (s.colorMode) saveSettings('colorMode', s.colorMode);
-        if (s.timeFormat) saveSettings('timeFormat', s.timeFormat);
-        if (s.tempUnit) saveSettings('tempUnit', s.tempUnit);
-        if (Array.isArray(s.enabledEngines)) saveSettings('enabledEngines', Array.from(new Set([...(settings.enabledEngines||[]), ...s.enabledEngines])));
-        if (s.preferredEngine) saveSettings('preferredEngine', s.preferredEngine);
-        if (s.weatherLocation) saveSettings('weatherLocation', s.weatherLocation);
-
-        // Merge categories: avoid duplicate ids. If id exists, skip; otherwise add.
-        const existingIds = new Set(categories.map(c => c.id));
-        (backup.categories || []).forEach(cat => {
-            if (!cat.id || existingIds.has(cat.id)) {
-                // generate new id to avoid collision
-                const newId = 'imp_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-                categories.push({ ...cat, id: newId });
-            } else {
-                categories.push(cat);
-            }
-        });
-
-        // Merge links: for each category in backup, append links to existing category (match by id), otherwise create new category and assign links
-        Object.keys(backup.links || {}).forEach(catId => {
-            const catLinks = backup.links[catId] || [];
-            let targetId = catId;
-            if (!categories.find(c => c.id === catId)) {
-                // try to find category by name
-                const byName = (backup.categories || []).find(c => c.id === catId);
-                if (byName) {
-                    // add category
-                    categories.push(byName);
-                } else {
-                    // create a new category id
-                    targetId = 'imp_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-                    categories.push({ id: targetId, name: catId, icon: 'fa-solid fa-folder' });
-                }
-            }
-
-            if (!links[targetId]) links[targetId] = [];
-
-            // Append links while avoiding duplicates by URL
-            const existingUrls = new Set((links[targetId] || []).map(l => l.url));
-            catLinks.forEach(link => {
-                if (!existingUrls.has(link.url)) {
-                    links[targetId].push(link);
-                }
-            });
-        });
-
-        // Persist
-        saveCategories(categories);
-        saveLinks(links);
-        // Merge search engines: add only engines whose id does not already exist
-        if (Array.isArray(backup.searchEngines)) {
-            const existingIds = new Set(searchEngines.map(se => se.id));
-            backup.searchEngines.forEach(se => {
-                if (!se || typeof se !== 'object' || !se.id) return;
-                if (existingIds.has(se.id)) return;
-                // ensure fields exist
-                const entry = {
-                    id: se.id,
-                    name: se.name || se.id,
-                    url: se.url || '',
-                    iconHtml: se.iconHtml || se.iconHtml === '' ? se.iconHtml : (se.icon || ''),
-                    visible: typeof se.visible === 'boolean' ? se.visible : true
-                };
-                searchEngines.push(entry);
-            });
-            saveSearchEngines(searchEngines);
-            renderSearchEngines();
-            renderSearchEnginesSettings();
-        }
-
-        // Re-render UI
-        renderCategoriesSettings();
-        renderLinksGrid();
-        renderSearchEngines();
-        populateSettingsUI();
-
-        showResultModal('Import Complete', 'Backup imported (merge).');
-    } catch (err) {
-        console.error('Apply merge failed', err);
-        showResultModal('Import Failed', 'Failed to merge backup. See console for details.');
-    }
-}
-
-function handleImportFile(file) {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        try {
-            const text = e.target.result;
-            const data = JSON.parse(text);
-            // Validate and show confirm modal
-            const validation = validateBackup(data);
-            if (!validation.valid) {
-                showResultModal('Import Error', 'Backup validation failed:\n' + validation.errors.join('\n'));
-                return;
-            }
-
-            // Hold parsed backup globally until user chooses Merge/Replace
-            window.__importCandidate = data;
-
-            // Open confirm modal
-            const icm = document.getElementById('import-confirm-modal');
-            if (icm) {
-                // Build a friendly summary
-                const catCount = Array.isArray(data.categories) ? data.categories.length : 0;
-                const linksCount = data.links ? Object.values(data.links).reduce((s, arr) => s + (Array.isArray(arr) ? arr.length : 0), 0) : 0;
-                const seCount = Array.isArray(data.searchEngines) ? data.searchEngines.length : 0;
-                const ts = (data.meta && data.meta.timestamp) ? new Date(data.meta.timestamp).toLocaleString() : 'unknown';
-                const msg = `Backup from ${ts} — ${catCount} categories, ${linksCount} links, ${seCount} search engines. Use the checkbox below to include API keys if desired.`;
-                const msgEl = document.getElementById('import-confirm-message');
-                if (msgEl) msgEl.textContent = msg;
-                icm.classList.add('active');
-                icm.setAttribute('aria-hidden', 'false');
-            } else {
-                // fallback: replace immediately
-                applyBackupReplace(data);
-            }
-        } catch (err) {
-            console.error('Import parse error', err);
-            showResultModal('Import Failed', 'Failed to parse backup file. Make sure it is valid JSON.');
-        }
-    };
-    reader.readAsText(file);
-}
-
-// Simple JSON schema validation with friendly messages
-function validateBackup(obj) {
-    const errors = [];
-    if (!obj || typeof obj !== 'object') {
-        errors.push('File is not a valid JSON object.');
-        return { valid: false, errors };
-    }
-
-    if (!obj.meta || typeof obj.meta.version === 'undefined') {
-        errors.push('Missing meta.version in backup.');
-    }
-
-    if (obj.settings) {
-        if (typeof obj.settings !== 'object') errors.push('settings must be an object.');
-        else {
-            if (obj.settings.userName && typeof obj.settings.userName !== 'string') errors.push('settings.userName must be a string.');
-            if (obj.settings.enabledEngines && !Array.isArray(obj.settings.enabledEngines)) errors.push('settings.enabledEngines must be an array.');
-        }
-    }
-
-    if (obj.categories) {
-        if (!Array.isArray(obj.categories)) errors.push('categories must be an array.');
-        else {
-            obj.categories.forEach((c, i) => {
-                if (!c || typeof c !== 'object') errors.push(`categories[${i}] must be an object.`);
-                else {
-                    if (!c.id || typeof c.id !== 'string') errors.push(`categories[${i}].id is required and must be a string.`);
-                    if (!c.name || typeof c.name !== 'string') errors.push(`categories[${i}].name is required and must be a string.`);
-                }
-            });
-        }
-    }
-
-    if (obj.links) {
-        if (typeof obj.links !== 'object' || Array.isArray(obj.links)) errors.push('links must be an object mapping categoryId -> array of links.');
-        else {
-            Object.keys(obj.links).forEach(catId => {
-                const arr = obj.links[catId];
-                if (!Array.isArray(arr)) errors.push(`links['${catId}'] must be an array.`);
-                else {
-                    arr.forEach((l, j) => {
-                        if (!l || typeof l !== 'object') errors.push(`links['${catId}'][${j}] must be an object.`);
-                        else {
-                            if (!l.name || typeof l.name !== 'string') errors.push(`links['${catId}'][${j}].name is required and must be a string.`);
-                            if (!l.url || typeof l.url !== 'string') errors.push(`links['${catId}'][${j}].url is required and must be a string.`);
-                        }
-                    });
-                }
-            });
-        }
-    }
-
-    if (obj.searchEngines) {
-        if (!Array.isArray(obj.searchEngines)) errors.push('searchEngines must be an array.');
-        else {
-            obj.searchEngines.forEach((se, i) => {
-                if (!se || typeof se !== 'object') errors.push(`searchEngines[${i}] must be an object.`);
-                else {
-                    if (!se.id || typeof se.id !== 'string') errors.push(`searchEngines[${i}].id is required and must be a string.`);
-                    if (!se.name || typeof se.name !== 'string') errors.push(`searchEngines[${i}].name is required and must be a string.`);
-                    if (!se.url || typeof se.url !== 'string') errors.push(`searchEngines[${i}].url is required and must be a string.`);
-                    if (typeof se.visible !== 'undefined' && typeof se.visible !== 'boolean') errors.push(`searchEngines[${i}].visible must be a boolean if present.`);
-                }
-            });
-        }
-    }
-
-    return { valid: errors.length === 0, errors };
-}
-
 
 function updateToggleStates() {
     document.querySelectorAll('.toggle-btn').forEach(btn => {
@@ -1403,15 +1246,12 @@ function renderCategoriesSettings() {
     
     container.innerHTML = categories.map((category, index) => `
         <div class="category-item" data-id="${category.id}">
+            <label class="category-checkbox">
+                <input type="checkbox" data-id="${category.id}" ${category.visible ? 'checked' : ''}>
+            </label>
             <span class="icon-preview"><i class="${category.icon}"></i></span>
             <input type="text" class="icon-input" value="${category.icon}" placeholder="fa-solid fa-folder" data-field="icon">
             <input type="text" value="${category.name}" placeholder="Category Name" maxlength="20" data-field="name">
-            <button class="toggle-visibility" title="Toggle Visibility" data-action="visibility">
-                <i class="fa-solid ${category.hidden ? 'fa-eye-slash' : 'fa-eye'}"></i>
-            </button>
-            <button class="toggle-pin ${category.pinned ? 'active' : ''}" title="Pin to top" data-action="pin">
-                <i class="fa-solid fa-thumbtack"></i>
-            </button>
             <button class="delete-btn" title="Delete Category" ${categories.length <= 1 ? 'disabled' : ''}>
                 <i class="fa-solid fa-trash"></i>
             </button>
@@ -1426,6 +1266,19 @@ function renderCategoriesSettings() {
     container.querySelectorAll('.category-item').forEach(item => {
         const categoryId = item.dataset.id;
         const iconPreview = item.querySelector('.icon-preview i');
+        const checkbox = item.querySelector('.category-checkbox input');
+
+        if (checkbox) {
+            checkbox.addEventListener('change', (e) => {
+                const cat = categories.find(c => c.id === categoryId);
+                if (cat) {
+
+                    cat.visible = e.target.checked;
+                    saveCategories(categories);
+                    renderLinksGrid();
+                }
+            });
+        }
         
         item.querySelectorAll('input').forEach(input => {
             input.addEventListener('input', () => {
@@ -1445,40 +1298,6 @@ function renderCategoriesSettings() {
             });
         });
         
-        // Visibility toggle
-        const visBtn = item.querySelector('.toggle-visibility');
-        if (visBtn) {
-            visBtn.addEventListener('click', () => {
-                const category = categories.find(c => c.id === categoryId);
-                if (category) {
-                    category.hidden = !category.hidden;
-                    saveCategories(categories);
-                    renderCategoriesSettings();
-                    renderLinksGrid();
-                }
-            });
-        }
-
-        // Pin toggle (ensure only one pinned)
-        const pinBtn = item.querySelector('.toggle-pin');
-        if (pinBtn) {
-            pinBtn.addEventListener('click', () => {
-                const category = categories.find(c => c.id === categoryId);
-                if (!category) return;
-                // If already pinned, unpin it
-                if (category.pinned) {
-                    category.pinned = false;
-                } else {
-                    // unpin others
-                    categories.forEach(c => c.pinned = false);
-                    category.pinned = true;
-                }
-                saveCategories(categories);
-                renderCategoriesSettings();
-                renderLinksGrid();
-            });
-        }
-
         item.querySelector('.delete-btn'). addEventListener('click', () => {
             if (categories.length > 1) {
                 deleteCategory(categoryId);
@@ -1494,9 +1313,7 @@ function addCategory() {
     categories.push({
         id: newId,
         name: 'New Category',
-        icon: 'fa-solid fa-folder',
-        pinned: false,
-        hidden: false
+        icon: 'fa-solid fa-folder'
     });
     links[newId] = [];
     
@@ -1563,13 +1380,13 @@ function renderLinksForCategory(categoryId) {
     
     container.innerHTML = categoryLinks.map((link, index) => `
         <div class="link-item" data-index="${index}">
+            <label class="link-checkbox">
+                <input type="checkbox" data-index="${index}" ${link.visible ? 'checked' : ''}>
+            </label>
             <span class="icon-preview"><i class="${link.icon || 'fa-solid fa-link'}"></i></span>
             <input type="text" class="icon-input" value="${link.icon || 'fa-solid fa-link'}" placeholder="fa-solid fa-link" data-field="icon">
             <input type="text" value="${link.name}" placeholder="Link Name" maxlength="20" data-field="name">
             <input type="url" class="url-input" value="${link.url}" placeholder="https://..." data-field="url">
-            <button class="toggle-visibility" title="Toggle Visibility" data-action="visibility">
-                <i class="fa-solid ${link.hidden ? 'fa-eye-slash' : 'fa-eye'}"></i>
-            </button>
             <button class="delete-btn" title="Delete Link">
                 <i class="fa-solid fa-trash"></i>
             </button>
@@ -1584,6 +1401,7 @@ function renderLinksForCategory(categoryId) {
     container.querySelectorAll('.link-item').forEach(item => {
         const index = parseInt(item.dataset.index);
         const iconPreview = item.querySelector('.icon-preview i');
+        const checkbox = item.querySelector('.link-checkbox input');
         
         item.querySelectorAll('input').forEach(input => {
             input.addEventListener('input', () => {
@@ -1595,25 +1413,21 @@ function renderLinksForCategory(categoryId) {
                     
                     // Update icon preview
                     if (field === 'icon' && iconPreview) {
-                        iconPreview.className = input.value || 'fa-solid fa-link';
+                        iconPreview. className = input.value || 'fa-solid fa-link';
                     }
                 }
             });
         });
-        
-        // Visibility toggle for link
-        const visBtn = item.querySelector('.toggle-visibility');
-        if (visBtn) {
-            visBtn.addEventListener('click', () => {
+        if (checkbox) {
+            checkbox.addEventListener('change', (e) => {
                 if (links[categoryId] && links[categoryId][index]) {
-                    links[categoryId][index].hidden = !links[categoryId][index].hidden;
+                    links[categoryId][index].visible = e.target.checked;
                     saveLinks(links);
-                    renderLinksForCategory(categoryId);
                     renderLinksGrid();
                 }
             });
         }
-
+        
         item.querySelector('.delete-btn'). addEventListener('click', () => {
             deleteLink(categoryId, index);
         });
@@ -1634,8 +1448,7 @@ function addLink() {
     links[categoryId].push({
         name: 'New Link',
         url: 'https://',
-        icon: 'fa-solid fa-link',
-        hidden: false
+        icon: 'fa-solid fa-link'
     });
     
     saveLinks(links);
@@ -1653,96 +1466,101 @@ function deleteLink(categoryId, index) {
 }
 
 // ========================================
-// Search Engines Management (Settings Panel)
+// Social Links Management
 // ========================================
 
-function renderSearchEnginesSettings() {
-    const container = document.getElementById('search-engines-list');
-    if (!container) return;
+const defaultSocialPlatforms = [
+    { name: 'Facebook', icon: 'fa-brands fa-facebook', visible: false, url: '' },
+    { name: 'Instagram', icon: 'fa-brands fa-instagram', visible: false, url: '' },
+    { name: 'Twitter/X', icon: 'fa-brands fa-x-twitter', visible: false, url: '' },
+    { name: 'LinkedIn', icon: 'fa-brands fa-linkedin', visible: false, url: '' },
+    { name: 'GitHub', icon: 'fa-brands fa-github', visible: false, url: '' },
+    { name: 'YouTube', icon: 'fa-brands fa-youtube', visible: false, url: '' },
+    { name: 'TikTok', icon: 'fa-brands fa-tiktok', visible: false, url: '' },
+    { name: 'Discord', icon: 'fa-brands fa-discord', visible: false, url: '' },
+    { name: 'Reddit', icon: 'fa-brands fa-reddit-alien', visible: false, url: '' },
+    { name: 'Mastodon', icon: 'fa-brands fa-mastodon', visible: false, url: '' }
+];
 
-    container.innerHTML = searchEngines.map(engine => `
-        <div class="category-item search-engine-item" data-id="${engine.id}">
-            <span class="icon-preview">${engine.iconHtml || '<i class="fa-solid fa-magnifying-glass"></i>'}</span>
-            <input type="text" class="icon-input" value="${(engine.iconHtml||'').replace(/"/g, '&quot;')}" placeholder="HTML or <i class=...>" data-field="iconHtml">
-            <input type="text" value="${(engine.name||'').replace(/"/g, '&quot;')}" placeholder="Name" maxlength="30" data-field="name">
-            <input type="url" class="url-input" value="${(engine.url||'').replace(/"/g, '&quot;')}" placeholder="https://..." data-field="url">
-            <button class="toggle-visibility" title="Toggle Visibility" data-action="visibility">
-                <i class="fa-solid ${engine.visible ? 'fa-eye' : 'fa-eye-slash'}"></i>
-            </button>
-            <button class="delete-btn" title="Delete Search Engine">
-                <i class="fa-solid fa-trash"></i>
-            </button>
+function initializeSocialLinks() {
+    if (!settings.socialLinks || settings.socialLinks.length === 0) {
+        settings.socialLinks = JSON.parse(JSON.stringify(defaultSocialPlatforms));
+        saveSettings('socialLinks', settings.socialLinks);
+    }
+}
+
+function renderSocialLinksSettings() {
+    const container = document.getElementById('social-links-list');
+    if (!container) return;
+    
+    if (!settings.socialLinks || settings.socialLinks.length === 0) {
+        initializeSocialLinks();
+    }
+    
+    container.innerHTML = settings.socialLinks.map((social, index) => `
+        <div class="social-link-item" data-index="${index}">
+            <label class="social-checkbox">
+                <input type="checkbox" ${social.visible ? 'checked' : ''} data-index="${index}">
+            </label>
+            <span class="icon-preview"><i class="${social.icon}"></i></span>
+            <span class="social-name">${social.name}</span>
+            <input type="url" class="social-url-input" value="${social.url || ''}" placeholder="https://..." data-index="${index}">
         </div>
     `).join('');
-
+    
     // Bind events
-    container.querySelectorAll('.search-engine-item').forEach(item => {
-        const id = item.dataset.id;
-        const engine = searchEngines.find(e => e.id === id);
-        if (!engine) return;
-
-        const iconInput = item.querySelector('input[data-field="iconHtml"]');
-        const nameInput = item.querySelector('input[data-field="name"]');
-        const urlInput = item.querySelector('input[data-field="url"]');
-        const preview = item.querySelector('.icon-preview');
-
-        [iconInput, nameInput, urlInput].forEach(inp => {
-            if (!inp) return;
-            inp.addEventListener('input', () => {
-                const field = inp.dataset.field;
-                engine[field] = inp.value;
-                saveSearchEngines(searchEngines);
-                renderSearchEngines();
-                if (field === 'iconHtml' && preview) preview.innerHTML = engine.iconHtml || '';
-            });
+    container.querySelectorAll('.social-checkbox input').forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+            const index = parseInt(e.target.dataset.index);
+            settings.socialLinks[index].visible = e.target.checked;
+            saveSettings('socialLinks', settings.socialLinks);
+            updateFooter();
         });
-
-        const visBtn = item.querySelector('.toggle-visibility');
-        if (visBtn) {
-            visBtn.addEventListener('click', () => {
-                engine.visible = !engine.visible;
-                saveSearchEngines(searchEngines);
-                renderSearchEnginesSettings();
-                renderSearchEngines();
-            });
-        }
-
-        const delBtn = item.querySelector('.delete-btn');
-        if (delBtn) {
-            delBtn.addEventListener('click', () => {
-                // immediate delete as requested
-                const idx = searchEngines.findIndex(e => e.id === id);
-                if (idx !== -1) {
-                    searchEngines.splice(idx, 1);
-                    // ensure at least one engine remains
-                    if (searchEngines.length === 0) {
-                        const fallback = { id: 'google', name: 'Google', url: allSearchEngines.google.url, iconHtml: allSearchEngines.google.icon, visible: true };
-                        searchEngines.push(fallback);
-                    }
-                    saveSearchEngines(searchEngines);
-                    renderSearchEnginesSettings();
-                    renderSearchEngines();
-                }
-            });
-        }
+    });
+    
+    container.querySelectorAll('.social-url-input').forEach(input => {
+        input.addEventListener('input', (e) => {
+            const index = parseInt(e.target.dataset.index);
+            settings.socialLinks[index].url = e.target.value;
+            saveSettings('socialLinks', settings.socialLinks);
+            updateFooter();
+        });
     });
 }
 
-function addSearchEngine() {
-    const newId = 'se_' + Date.now();
-    const entry = {
-        id: newId,
-        name: 'New Engine',
-        url: 'https://www.google.com/search?q=',
-        iconHtml: '<i class="fa-solid fa-magnifying-glass"></i>',
-        visible: true
-    };
-    searchEngines.push(entry);
-    saveSearchEngines(searchEngines);
-    renderSearchEnginesSettings();
-    renderSearchEngines();
-    // select as preferred engine
-    setSearchEngine(entry.id);
+// ========================================
+// Footer Settings Management
+// ========================================
+
+function renderFooterSettings() {
+    // Update dropdowns
+    const footerLeftSelect = document.getElementById('footer-left-select');
+    const footerCenterSelect = document.getElementById('footer-center-select');
+    const footerRightSelect = document.getElementById('footer-right-select');
+    
+    if (footerLeftSelect) {
+        footerLeftSelect.value = settings.footerLeft;
+        footerLeftSelect.addEventListener('change', (e) => {
+            saveSettings('footerLeft', e.target.value);
+            updateFooter();
+        });
+    }
+    
+    if (footerCenterSelect) {
+        footerCenterSelect.value = settings.footerCenter;
+        footerCenterSelect.addEventListener('change', (e) => {
+            saveSettings('footerCenter', e.target.value);
+            updateFooter();
+        });
+    }
+    
+    if (footerRightSelect) {
+        footerRightSelect.value = settings.footerRight;
+        footerRightSelect.addEventListener('change', (e) => {
+            saveSettings('footerRight', e.target.value);
+            updateFooter();
+        });
+    }
 }
 
 // ========================================
@@ -1763,12 +1581,11 @@ function handleKeyboard(event) {
         searchInput.blur();
     }
     
-    // Dynamic engine switching based on visible managed engines
+    // Dynamic engine switching based on enabled engines
     if (document.activeElement !== searchInput && !isSettingsOpen) {
         const num = parseInt(event.key);
-        const visible = searchEngines.filter(e => e.visible).map(e => e.id);
-        if (num >= 1 && num <= visible.length) {
-            setSearchEngine(visible[num - 1]);
+        if (num >= 1 && num <= settings.enabledEngines.length) {
+            setSearchEngine(settings.enabledEngines[num - 1]);
         }
     }
 }
@@ -1792,6 +1609,30 @@ function initEventListeners() {
     }
     
     document.addEventListener('keydown', handleKeyboard);
+    
+    // Backup & Restore buttons
+    const backupBtn = document.getElementById('backup-button');
+    const restoreBtn = document.getElementById('restore-button');
+    const restoreFileInput = document.getElementById('restore-file-input');
+    
+    if (backupBtn) {
+        backupBtn.addEventListener('click', exportSettings);
+    }
+    
+    if (restoreBtn && restoreFileInput) {
+        restoreBtn.addEventListener('click', () => {
+            restoreFileInput.click();
+        });
+        
+        restoreFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                importSettings(file);
+                // Reset input so same file can be selected again
+                e.target.value = '';
+            }
+        });
+    }
 }
 
 // ========================================
@@ -1802,7 +1643,7 @@ const commands = {
     'theme dark': () => applyTheme('dark'),
     'theme light': () => applyTheme('light'),
     'new tab': () => window.open('about:blank', '_blank'),
-    'github': () => window.open('https://github.com', '_blank'),
+    'github': () => window. location.href = 'https://github.com',
     'settings': () => document.getElementById('settings-overlay').classList.add('active'),
 };
 
@@ -1829,9 +1670,20 @@ function init() {
     dateElement = document.getElementById('date');
     greetingElement = document.getElementById('greeting');
     weatherElement = document.getElementById('weather');
+    quoteElement = document.getElementById('quote');
     linksGrid = document. getElementById('links-grid');
-    // Ensure weather location set to Mumbai as requested
-    saveSettings('weatherLocation', 'Mumbai,IN');
+    
+    // Hide "New Window" option on Safari (it behaves the same as "New Tab")
+    if (isSafari) {
+        const newWindowBtn = document.getElementById('new-window-btn');
+        if (newWindowBtn) {
+            newWindowBtn.style.display = 'none';
+            // If current setting is 'new-window', change it to 'new-tab'
+            if (settings.linkBehavior === 'new-window') {
+                saveSettings('linkBehavior', 'new-tab');
+            }
+        }
+    }
     
     // Render dynamic content
     renderLinksGrid();
@@ -1840,14 +1692,16 @@ function init() {
     // Update time immediately and every second
     updateDateTime();
     setInterval(updateDateTime, 1000);
-
-    // Toggle time format when clicking on the time element
+    
+    // Add click handler to time element to toggle format
     if (timeElement) {
         timeElement.style.cursor = 'pointer';
+        timeElement.title = 'Click to toggle time format';
         timeElement.addEventListener('click', () => {
             const newFormat = settings.timeFormat === '12' ? '24' : '12';
             saveSettings('timeFormat', newFormat);
             updateDateTime();
+            updateToggleStates();
         });
     }
     
@@ -1855,16 +1709,17 @@ function init() {
     updateWeather();
     setInterval(updateWeather, 600000);
     
-    // Quotes removed
+    // Set random quote
+    updateQuote();
     
-    // Restore preferred search engine (use managed engines when available)
-    const visibleEngines = searchEngines.filter(e => e.visible).map(e => e.id);
-    if (visibleEngines.includes(settings.preferredEngine)) {
+    // Update footer layout
+    updateFooter();
+    
+    // Restore preferred search engine
+    if (settings.enabledEngines.includes(settings.preferredEngine)) {
         setSearchEngine(settings.preferredEngine);
-    } else if (visibleEngines.length > 0) {
-        setSearchEngine(visibleEngines[0]);
-    } else {
-        setSearchEngine('google');
+    } else if (settings.enabledEngines.length > 0) {
+        setSearchEngine(settings.enabledEngines[0]);
     }
     
     // Initialize event listeners
@@ -1877,6 +1732,132 @@ function init() {
     setTimeout(() => {
         if (searchInput) searchInput.focus();
     }, 700);
+}
+
+// ========================================
+// Backup & Restore Functions
+// ========================================
+
+function exportSettings() {
+    // Gather all data
+    const exportData = {
+        version: '1.1.0',
+        exportDate: new Date().toISOString(),
+        settings: {
+            userName: localStorage.getItem('userName'),
+            colorScheme: localStorage.getItem('colorScheme'),
+            theme: localStorage.getItem('theme'),
+            colorMode: localStorage.getItem('colorMode'),
+            timeFormat: localStorage.getItem('timeFormat'),
+            showSeconds: localStorage.getItem('showSeconds'),
+            tempUnit: localStorage.getItem('tempUnit'),
+            showQuotes: localStorage.getItem('showQuotes'),
+            enabledEngines: localStorage.getItem('enabledEngines'),
+            preferredEngine: localStorage.getItem('preferredEngine'),
+            weatherLocation: localStorage.getItem('weatherLocation'),
+            openWeatherApiKey: localStorage.getItem('openWeatherApiKey'),
+            waqiApiKey: localStorage.getItem('waqiApiKey'),
+            linkBehavior: localStorage.getItem('linkBehavior'),
+            showKeyboardHints: localStorage.getItem('showKeyboardHints'),
+            footerLeft: localStorage.getItem('footerLeft'),
+            footerCenter: localStorage.getItem('footerCenter'),
+            footerRight: localStorage.getItem('footerRight'),
+            socialLinks: localStorage.getItem('socialLinks')
+        },
+        categories: localStorage.getItem('categories'),
+        links: localStorage.getItem('links')
+    };
+    
+    // Create and download file
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `sip-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    // Show confirmation
+    showNotification('Settings exported successfully!', 'success');
+}
+
+function importSettings(file) {
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        try {
+            const importData = JSON.parse(e.target.result);
+            
+            // Validate data structure
+            if (!importData.version || !importData.settings) {
+                throw new Error('Invalid backup file format');
+            }
+            
+            // Confirm before overwriting
+            if (!confirm('This will replace all your current settings, categories, and links. Continue?')) {
+                return;
+            }
+            
+            // Import settings
+            Object.entries(importData.settings).forEach(([key, value]) => {
+                if (value !== null && value !== undefined) {
+                    localStorage.setItem(key, value);
+                }
+            });
+            
+            // Import categories and links
+            if (importData.categories) {
+                localStorage.setItem('categories', importData.categories);
+            }
+            if (importData.links) {
+                localStorage.setItem('links', importData.links);
+            }
+            
+            // Show success message and reload
+            showNotification('Settings imported successfully! Reloading...', 'success');
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+            
+        } catch (error) {
+            showNotification('Error importing settings: ' + error.message, 'error');
+        }
+    };
+    
+    reader.readAsText(file);
+}
+
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        background: var(--surface0);
+        border: 1px solid var(--${type === 'success' ? 'green' : type === 'error' ? 'red' : 'primary'});
+        border-radius: var(--radius-md);
+        color: var(--text);
+        box-shadow: var(--shadow-lg);
+        z-index: 10000;
+        animation: slideIn 0.3s ease-out;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
 }
 
 // ========================================
