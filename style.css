@@ -1471,13 +1471,14 @@ body {
 
 .engine-item {
     display: grid;
-    grid-template-columns: 48px 48px 160px 140px 1fr 64px;
+    grid-template-columns: 30px 48px 160px 140px 170px 100px;
     align-items: center;
     gap: var(--spacing-sm);
     padding: var(--spacing-sm);
     background: var(--surface0);
     border-radius: var(--radius-sm);
     border: 1px solid var(--glass-border);
+    justify-items: start;
 }
 
 /* Force fixed-width rows and allow horizontal scrolling in the grid container */
@@ -1498,10 +1499,11 @@ body {
     overflow-x: auto;
     padding-bottom: 6px;
     max-width: 100%;
+    align-items: center;
 }
 
 .engine-item {
-    min-width: 820px; /* fixed row min-width to avoid wrapping; horizontal scroll on container */
+    min-width: 80px;
 }
 
 .engine-icon-preview {
@@ -1554,6 +1556,8 @@ body {
 .engine-actions {
     display: flex;
     gap: 0.5rem;
+    justify-content: flex-start;
+
 }
 
 .engine-actions button {
