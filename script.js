@@ -1,16 +1,11 @@
-// ========================================
-// Sip - Modern Browser Startpage
-// ========================================
+// Sip — Modern Browser Startpage
+// Main script: renders UI, manages settings, and persists data to localStorage.
 
-// ========================================
-// Browser Detection
-// ========================================
+// Browser detection / feature flags
 
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-// ========================================
-// Default Data
-// ========================================
+// Default data: categories, links, and colors used when no user data exists
 
 const defaultCategories = [
     { id: 'dev', name: 'Development', icon: 'fa-solid fa-code' },
@@ -56,9 +51,7 @@ const defaultLinks = {
 
 const categoryColors = ['mauve', 'blue', 'red', 'green', 'peach', 'teal', 'pink', 'yellow'];
 
-// ========================================
-// Search Engine Configuration
-// ========================================
+// Search engine configuration (default engines and URLs)
 
 const allSearchEngines = {
     google: {
@@ -108,11 +101,9 @@ const allSearchEngines = {
     }
 };
 
-// ========================================
-// Settings Management
-// ========================================
+// Settings management: load/save helpers and defaults (localStorage-backed)
 
-// Small helper to escape HTML for value attributes
+// Escape a string for safe insertion into HTML attributes (prevents markup injection)
 function escapeHtml(str) {
     if (str === undefined || str === null) return '';
     return String(str)
@@ -210,13 +201,22 @@ function loadLinks() {
     const saved = localStorage.getItem('links');
     const lnks = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultLinks));
 
-    // Ensure each link has a visible flag (default true)
+    // Ensure each link has a visible flag (default true) and a stable id
+    let mutated = false;
     Object.keys(lnks).forEach(catId => {
         lnks[catId] = lnks[catId].map(link => {
             if (link.visible === undefined) link.visible = true;
+            if (!link.id) {
+                // Assign a stable-ish id for drag operations
+                link.id = 'link_' + Math.random().toString(36).substr(2, 9);
+                mutated = true;
+            }
             return link;
         });
     });
+
+    // Persist if we added ids
+    if (mutated) saveLinks(lnks);
 
     return lnks;
 }
@@ -940,9 +940,7 @@ function createFooterWidget(type) {
     return null;
 }
 
-// ========================================
-// Links Grid Rendering
-// ========================================
+// Links grid rendering: builds the main page tiles from `categories` and `links`
 
 function renderLinksGrid() {
     if (!linksGrid) return;
@@ -963,7 +961,7 @@ function renderLinksGrid() {
                 </h2>
                 <div class="links">
                     ${categoryLinks.map(link => `
-                        <a href="${link.url}" class="link-card" target="${linkTarget}" data-link-behavior="${settings.linkBehavior}">
+                                    <a href="${link.url}" class="link-card" target="${linkTarget}" data-link-behavior="${settings.linkBehavior}" data-link-id="${link.id}">
                             <span class="link-icon"><i class="${link.icon || 'fa-solid fa-link'}"></i></span>
                             <span class="link-text">${link.name}</span>
                         </a>
@@ -986,6 +984,8 @@ function renderLinksGrid() {
     });
     
     updateGridLayout();
+    // Initialize drag-and-drop on the main grid and per-category link lists
+    initDragAndDropMain();
 }
 
 function updateGridLayout() {
@@ -1004,9 +1004,7 @@ function updateGridLayout() {
     }
 }
 
-// ========================================
-// Settings Modal Functions
-// ========================================
+// Settings modal UI: open/close, tab handling, and control bindings
 
 function initSettings() {
     const settingsBtn = document.getElementById('settings-btn');
@@ -1234,9 +1232,7 @@ function updateToggleStates() {
     });
 }
 
-// ========================================
-// Category Management
-// ========================================
+// Category management: rendering and CRUD operations for categories
 
 function renderCategoriesSettings() {
     const container = document.getElementById('categories-list');
@@ -1304,6 +1300,9 @@ function renderCategoriesSettings() {
             }
         });
     });
+
+    // Enable drag-and-drop in settings categories list
+    initDragAndDropSettings();
 }
 
 function addCategory() {
@@ -1335,9 +1334,7 @@ function deleteCategory(categoryId) {
     updateLinkCategorySelect();
 }
 
-// ========================================
-// Link Management
-// ========================================
+// Link management: render, add, edit, delete links; keep `links` in sync with localStorage
 
 function renderLinksSettings() {
     updateLinkCategorySelect();
@@ -1379,7 +1376,7 @@ function renderLinksForCategory(categoryId) {
     const categoryLinks = links[categoryId] || [];
     
     container.innerHTML = categoryLinks.map((link, index) => `
-        <div class="link-item" data-index="${index}">
+        <div class="link-item" data-index="${index}" data-link-id="${link.id}">
             <label class="link-checkbox">
                 <input type="checkbox" data-index="${index}" ${link.visible ? 'checked' : ''}>
             </label>
@@ -1400,6 +1397,7 @@ function renderLinksForCategory(categoryId) {
     // Bind events
     container.querySelectorAll('.link-item').forEach(item => {
         const index = parseInt(item.dataset.index);
+        const linkId = item.dataset.linkId;
         const iconPreview = item.querySelector('.icon-preview i');
         const checkbox = item.querySelector('.link-checkbox input');
         
@@ -1432,6 +1430,9 @@ function renderLinksForCategory(categoryId) {
             deleteLink(categoryId, index);
         });
     });
+
+    // Initialize drag-and-drop for the links list in settings
+    initDragAndDropSettings();
 }
 
 function addLink() {
@@ -1659,9 +1660,7 @@ function executeCommand(input) {
     return false;
 }
 
-// ========================================
-// Initialization
-// ========================================
+// Initialization: wire up DOM references, render initial UI, and start timers
 
 function init() {
     // Get DOM elements
@@ -1732,6 +1731,121 @@ function init() {
     setTimeout(() => {
         if (searchInput) searchInput.focus();
     }, 700);
+}
+
+// Drag & drop (SortableJS) integration
+// - Reorders categories and links on the main grid
+// - Supports cross-category moves for links
+// - Persists resulting order to localStorage via `saveCategories` / `saveLinks`
+
+function initDragAndDropMain() {
+    if (typeof Sortable === 'undefined') return;
+
+    // Categories reorder on main grid
+    try {
+        Sortable.create(linksGrid, {
+            animation: 150,
+            handle: '.group-title',
+            draggable: 'section.link-group',
+            onEnd: function (evt) {
+                // Rebuild categories order based on DOM
+                const newOrder = Array.from(document.querySelectorAll('#links-grid .link-group')).map(el => el.dataset.category);
+                categories = newOrder.map(id => categories.find(c => c.id === id)).filter(Boolean);
+                saveCategories(categories);
+                renderCategoriesSettings();
+            }
+        });
+    } catch (e) {
+        console.warn('Could not init category Sortable on main grid', e);
+    }
+
+    // Per-category links: allow moving between categories
+    document.querySelectorAll('#links-grid .link-group .links').forEach(container => {
+        try {
+            Sortable.create(container, {
+                group: 'links',
+                animation: 150,
+                draggable: '.link-card',
+                onAdd: function (evt) {
+                    const fromGroup = evt.from.closest('.link-group').dataset.category;
+                    const toGroup = evt.to.closest('.link-group').dataset.category;
+                    const linkId = evt.item.dataset.linkId;
+                    if (!linkId) return;
+
+                    // Remove from source
+                    const srcArr = links[fromGroup] || [];
+                    const linkObjIndex = srcArr.findIndex(l => l.id === linkId);
+                    if (linkObjIndex === -1) return;
+                    const [moved] = srcArr.splice(linkObjIndex, 1);
+
+                    // Insert into destination at new index
+                    const destArr = links[toGroup] || (links[toGroup] = []);
+                    destArr.splice(evt.newIndex, 0, moved);
+
+                    saveLinks(links);
+                    renderLinksSettings();
+                },
+                onUpdate: function (evt) {
+                    // Reorder within same category
+                    const groupId = evt.from.closest('.link-group').dataset.category;
+                    const arr = links[groupId] || [];
+                    // Build new order from DOM
+                    const newOrder = Array.from(evt.from.querySelectorAll('.link-card')).map(a => a.dataset.linkId);
+                    links[groupId] = newOrder.map(id => arr.find(l => l.id === id)).filter(Boolean);
+                    saveLinks(links);
+                    renderLinksSettings();
+                }
+            });
+        } catch (e) {
+            console.warn('Could not init Sortable for links container', e);
+        }
+    });
+}
+
+function initDragAndDropSettings() {
+    if (typeof Sortable === 'undefined') return;
+
+    // Categories list in settings
+    const catsContainer = document.getElementById('categories-list');
+    if (catsContainer) {
+        try {
+            Sortable.create(catsContainer, {
+                animation: 150,
+                draggable: '.category-item',
+                onEnd: function () {
+                    const newOrder = Array.from(catsContainer.querySelectorAll('.category-item')).map(el => el.dataset.id);
+                    categories = newOrder.map(id => categories.find(c => c.id === id)).filter(Boolean);
+                    saveCategories(categories);
+                    renderLinksGrid();
+                }
+            });
+        } catch (e) {
+            console.warn('Could not init Sortable for settings categories', e);
+        }
+    }
+
+    // Links list in settings (only for selected category)
+    const linksContainer = document.getElementById('links-list');
+    if (linksContainer) {
+        try {
+            Sortable.create(linksContainer, {
+                animation: 150,
+                draggable: '.link-item',
+                onEnd: function () {
+                    const select = document.getElementById('link-category-select');
+                    const catId = select ? select.value : null;
+                    if (!catId) return;
+                    const newOrder = Array.from(linksContainer.querySelectorAll('.link-item')).map(el => el.dataset.linkId);
+                    const arr = links[catId] || [];
+                    links[catId] = newOrder.map(id => arr.find(l => l.id === id)).filter(Boolean);
+                    saveLinks(links);
+                    renderLinksGrid();
+                }
+            });
+        } catch (e) {
+            console.warn('Could not init Sortable for settings links', e);
+        }
+    }
 }
 
 // ========================================
