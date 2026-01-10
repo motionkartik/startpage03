@@ -1247,7 +1247,7 @@ function renderCategoriesSettings() {
             </label>
             <span class="icon-preview"><i class="${category.icon}"></i></span>
             <input type="text" class="icon-input" value="${category.icon}" placeholder="fa-solid fa-folder" data-field="icon">
-            <input type="text" value="${category.name}" placeholder="Category Name" maxlength="20" data-field="name">
+            <input type="text" value="${category.name}" placeholder="Category Name" maxlength="1001" data-field="name">
             <button class="delete-btn" title="Delete Category" ${categories.length <= 1 ? 'disabled' : ''}>
                 <i class="fa-solid fa-trash"></i>
             </button>
@@ -1255,7 +1255,7 @@ function renderCategoriesSettings() {
     `).join('');
     
     if (addBtn) {
-        addBtn.disabled = categories.length >= 8;
+        addBtn.disabled = categories.length >= 1001;
     }
     
     // Bind events
@@ -1306,7 +1306,7 @@ function renderCategoriesSettings() {
 }
 
 function addCategory() {
-    if (categories.length >= 8) return;
+    if (categories.length >= 1001) return;
     
     const newId = 'cat_' + Date.now();
     categories.push({
@@ -1335,6 +1335,34 @@ function deleteCategory(categoryId) {
 }
 
 // Link management: render, add, edit, delete links; keep `links` in sync with localStorage
+
+// Extract and format a clean domain name from a URL for autofill
+function getNameFromUrl(url) {
+    try {
+        const hostname = new URL(url).hostname;
+        const parts = hostname.replace(/^www\./, '').split('.');
+        let name = "";
+
+        if (parts.length >= 2) {
+            // Example: gemini.google.com -> Google Gemini
+            // Example: mail.google.com -> Google Mail
+            const domain = parts[parts.length - 2];
+            const subdomain = parts[0];
+
+            if (parts.length > 2 && subdomain !== 'www') { // Check for actual subdomain
+                name = `${domain.charAt(0).toUpperCase() + domain.slice(1)} ${subdomain.charAt(0).toUpperCase() + subdomain.slice(1)}`;
+            } else { // No significant subdomain or just www
+                name = domain.charAt(0).toUpperCase() + domain.slice(1);
+            }
+        } else {
+            // Fallback for simple domains like example.com
+            name = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+        }
+        return name;
+    } catch (e) {
+        return ""; // Return empty for invalid URLs
+    }
+}
 
 function renderLinksSettings() {
     updateLinkCategorySelect();
@@ -1382,7 +1410,7 @@ function renderLinksForCategory(categoryId) {
             </label>
             <span class="icon-preview"><i class="${link.icon || 'fa-solid fa-link'}"></i></span>
             <input type="text" class="icon-input" value="${link.icon || 'fa-solid fa-link'}" placeholder="fa-solid fa-link" data-field="icon">
-            <input type="text" value="${link.name}" placeholder="Link Name" maxlength="20" data-field="name">
+            <input type="text" value="${link.name}" placeholder="Link Name" maxlength="1001" data-field="name">
             <input type="url" class="url-input" value="${link.url}" placeholder="https://..." data-field="url">
             <button class="delete-btn" title="Delete Link">
                 <i class="fa-solid fa-trash"></i>
@@ -1391,7 +1419,7 @@ function renderLinksForCategory(categoryId) {
     `).join('');
     
     if (addBtn) {
-        addBtn.disabled = categoryLinks.length >= 10;
+        addBtn.disabled = categoryLinks.length >= 1001;
     }
     
     // Bind events
@@ -1400,21 +1428,55 @@ function renderLinksForCategory(categoryId) {
         const linkId = item.dataset.linkId;
         const iconPreview = item.querySelector('.icon-preview i');
         const checkbox = item.querySelector('.link-checkbox input');
+        const nameInput = item.querySelector('input[data-field="name"]');
+        const urlInput = item.querySelector('input[data-field="url"]');
+        
+        // Track if the user has manually edited the name field
+        let nameEdited = false;
         
         item.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', () => {
-                const field = input.dataset. field;
-                if (links[categoryId] && links[categoryId][index]) {
-                    links[categoryId][index][field] = input.value;
-                    saveLinks(links);
-                    renderLinksGrid();
-                    
-                    // Update icon preview
-                    if (field === 'icon' && iconPreview) {
-                        iconPreview. className = input.value || 'fa-solid fa-link';
+            const field = input.dataset.field;
+            
+            // Track manual name edits
+            if (field === 'name') {
+                input.addEventListener('input', () => {
+                    nameEdited = true;
+                });
+            }
+            
+            // URL input: trigger autofill of name if not manually edited
+            if (field === 'url') {
+                input.addEventListener('input', () => {
+                    if (links[categoryId] && links[categoryId][index]) {
+                        links[categoryId][index][field] = input.value;
+                        
+                        // Auto-fill name only if user hasn't manually edited it
+                        if (!nameEdited && nameInput) {
+                            const autoName = getNameFromUrl(input.value);
+                            if (autoName) {
+                                nameInput.value = autoName;
+                                links[categoryId][index].name = autoName;
+                            }
+                        }
+                        
+                        saveLinks(links);
+                        renderLinksGrid();
                     }
-                }
-            });
+                });
+            } else {
+                input.addEventListener('input', () => {
+                    if (links[categoryId] && links[categoryId][index]) {
+                        links[categoryId][index][field] = input.value;
+                        saveLinks(links);
+                        renderLinksGrid();
+                        
+                        // Update icon preview
+                        if (field === 'icon' && iconPreview) {
+                            iconPreview.className = input.value || 'fa-solid fa-link';
+                        }
+                    }
+                });
+            }
         });
         if (checkbox) {
             checkbox.addEventListener('change', (e) => {
@@ -1444,10 +1506,10 @@ function addLink() {
         links[categoryId] = [];
     }
     
-    if (links[categoryId].length >= 10) return;
+    if (links[categoryId].length >= 1001) return;
     
     links[categoryId].push({
-        name: 'New Link',
+        name: '', // Start with empty name to allow autofill
         url: 'https://',
         icon: 'fa-solid fa-link'
     });
