@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
         <!-- Ambient background effects -->
@@ -48,7 +50,7 @@
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
-                
+
                 <!-- Settings Tabs -->
                 <div class="settings-tabs">
                     <button class="settings-tab active" data-tab="general">
@@ -82,7 +84,8 @@
                                 <i class="fa-solid fa-user"></i>
                                 <span>Your Name (optional)</span>
                             </div>
-                            <input type="text" id="setting-name" class="setting-input" placeholder="Enter your name" maxlength="20">
+                            <input type="text" id="setting-name" class="setting-input" placeholder="Enter your name"
+                                maxlength="20">
                         </div>
                         <div class="setting-item">
                             <div class="setting-label">
@@ -107,22 +110,26 @@
                                 <span>Mode</span>
                             </div>
                             <div class="setting-toggle">
-                                <button class="toggle-btn" data-setting="theme" data-value="dark"><i class="fa-solid fa-moon"></i> Dark</button>
-                                <button class="toggle-btn" data-setting="theme" data-value="light"><i class="fa-solid fa-sun"></i> Light</button>
+                                <button class="toggle-btn" data-setting="theme" data-value="dark"><i
+                                        class="fa-solid fa-moon"></i> Dark</button>
+                                <button class="toggle-btn" data-setting="theme" data-value="light"><i
+                                        class="fa-solid fa-sun"></i> Light</button>
                             </div>
                         </div>
-                        
+
                         <div class="setting-item">
                             <div class="setting-label">
                                 <i class="fa-solid fa-swatchbook"></i>
                                 <span>Category Colors</span>
                             </div>
                             <div class="setting-toggle">
-                                <button class="toggle-btn" data-setting="colorMode" data-value="multi"><i class="fa-solid fa-rainbow"></i> Multi</button>
-                                <button class="toggle-btn" data-setting="colorMode" data-value="single"><i class="fa-solid fa-circle"></i> Single</button>
+                                <button class="toggle-btn" data-setting="colorMode" data-value="multi"><i
+                                        class="fa-solid fa-rainbow"></i> Multi</button>
+                                <button class="toggle-btn" data-setting="colorMode" data-value="single"><i
+                                        class="fa-solid fa-circle"></i> Single</button>
                             </div>
                         </div>
-                        
+
                         <div class="setting-item">
                             <div class="setting-label">
                                 <i class="fa-solid fa-clock"></i>
@@ -133,18 +140,20 @@
                                 <button class="toggle-btn" data-setting="timeFormat" data-value="24">24hr</button>
                             </div>
                         </div>
-                        
+
                         <div class="setting-item">
                             <div class="setting-label">
                                 <i class="fa-solid fa-stopwatch"></i>
                                 <span>Show Seconds</span>
                             </div>
                             <div class="setting-toggle">
-                                <button class="toggle-btn" data-setting="showSeconds" data-value="true"><i class="fa-solid fa-eye"></i> Show</button>
-                                <button class="toggle-btn" data-setting="showSeconds" data-value="false"><i class="fa-solid fa-eye-slash"></i> Hide</button>
+                                <button class="toggle-btn" data-setting="showSeconds" data-value="true"><i
+                                        class="fa-solid fa-eye"></i> Show</button>
+                                <button class="toggle-btn" data-setting="showSeconds" data-value="false"><i
+                                        class="fa-solid fa-eye-slash"></i> Hide</button>
                             </div>
                         </div>
-                        
+
                         <div class="setting-item">
                             <div class="setting-label">
                                 <i class="fa-solid fa-temperature-half"></i>
@@ -155,61 +164,72 @@
                                 <button class="toggle-btn" data-setting="tempUnit" data-value="C">°C</button>
                             </div>
                         </div>
-                        
+
                         <div class="setting-item">
                             <div class="setting-label">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                                 <span>Open Links In</span>
                             </div>
                             <div class="setting-toggle" id="link-behavior-toggle">
-                                <button class="toggle-btn" data-setting="linkBehavior" data-value="same">Same Tab</button>
-                                <button class="toggle-btn" data-setting="linkBehavior" data-value="new-tab">New Tab</button>
-                                <button class="toggle-btn" data-setting="linkBehavior" data-value="new-window" id="new-window-btn">New Window</button>
+                                <button class="toggle-btn" data-setting="linkBehavior" data-value="same">Same
+                                    Tab</button>
+                                <button class="toggle-btn" data-setting="linkBehavior" data-value="new-tab">New
+                                    Tab</button>
+                                <button class="toggle-btn" data-setting="linkBehavior" data-value="new-window"
+                                    id="new-window-btn">New Window</button>
                             </div>
                         </div>
-                        
+
                         <div class="setting-item">
                             <div class="setting-label">
                                 <i class="fa-solid fa-keyboard"></i>
                                 <span>Keyboard Shortcuts</span>
                             </div>
                             <div class="setting-toggle">
-                                <button class="toggle-btn" data-setting="showKeyboardHints" data-value="true"><i class="fa-solid fa-eye"></i> Show</button>
-                                <button class="toggle-btn" data-setting="showKeyboardHints" data-value="false"><i class="fa-solid fa-eye-slash"></i> Hide</button>
+                                <button class="toggle-btn" data-setting="showKeyboardHints" data-value="true"><i
+                                        class="fa-solid fa-eye"></i> Show</button>
+                                <button class="toggle-btn" data-setting="showKeyboardHints" data-value="false"><i
+                                        class="fa-solid fa-eye-slash"></i> Hide</button>
                             </div>
                         </div>
-                        
+
                         <div class="setting-item">
                             <div class="setting-label">
                                 <i class="fa-solid fa-map-marker-alt"></i>
                                 <span>Weather Location</span>
                             </div>
-                            <input type="text" id="setting-weather-location" class="setting-input" placeholder="Chicago,IL,US">
+                            <input type="text" id="setting-weather-location" class="setting-input"
+                                placeholder="Chicago,IL,US">
                         </div>
-                        
+
                         <div class="setting-item">
                             <div class="setting-label">
                                 <i class="fa-solid fa-key"></i>
-                                <span>OpenWeather API Key (<a href="https://openweathermap.org" target="_blank">openweathermap.org</a>)</span>
+                                <span>OpenWeather API Key (<a href="https://openweathermap.org"
+                                        target="_blank">openweathermap.org</a>)</span>
                             </div>
-                            <input type="text" id="setting-weather-api-key" class="setting-input" placeholder="Enter key">
+                            <input type="text" id="setting-weather-api-key" class="setting-input"
+                                placeholder="Enter key">
                         </div>
                         <div class="setting-item">
                             <div class="setting-label">
                                 <i class="fa-solid fa-wind"></i>
-                                <span>WAQI API Key (<a href="https://aqicn.org/api/" target="_blank">aqicn.org</a>)</span>
+                                <span>WAQI API Key (<a href="https://aqicn.org/api/"
+                                        target="_blank">aqicn.org</a>)</span>
                             </div>
-                            <input type="text" id="setting-waqi-api-key" class="setting-input" placeholder="Enter WAQI key">
+                            <input type="text" id="setting-waqi-api-key" class="setting-input"
+                                placeholder="Enter WAQI key">
                         </div>
-                        
+
                         <!-- Search Engines moved to its own panel -->
-                        
+
                         <div class="setting-item setting-item-vertical">
                             <div class="setting-label">
                                 <i class="fa-solid fa-download"></i>
                                 <span>Backup & Restore</span>
                             </div>
-                            <p class="setting-description">Export or import all your settings, categories, and links.</p>
+                            <p class="setting-description">Export or import all your settings, categories, and links.
+                            </p>
                             <div class="backup-buttons">
                                 <button id="backup-button" class="backup-btn">
                                     <i class="fa-solid fa-file-export"></i> Export Settings
@@ -221,10 +241,11 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Search Engines Tab -->
                     <div class="settings-panel" data-panel="search-engines">
-                        <p class="panel-description">Manage your search engines. Enable/disable or add custom engines.</p>
+                        <p class="panel-description">Manage your search engines. Enable/disable or add custom engines.
+                        </p>
                         <div class="search-engine-grid" id="search-engine-options">
                             <!-- Engine checkboxes populated by JS -->
                         </div>
@@ -234,9 +255,12 @@
                         <div class="add-engine-form" id="add-engine-container">
                             <input type="text" id="new-engine-id" class="setting-input" placeholder="id (no spaces)" />
                             <input type="text" id="new-engine-name" class="setting-input" placeholder="Display name" />
-                            <input type="text" id="new-engine-url" class="setting-input" placeholder="https://...prefix?q=" />
-                            <input type="text" id="new-engine-icon" class="setting-input" placeholder="<i class='fa-brands fa-...'></i>" />
-                            <button class="add-btn" id="add-engine-btn"><i class="fa-solid fa-plus"></i> Add Engine</button>
+                            <input type="text" id="new-engine-url" class="setting-input"
+                                placeholder="https://...prefix?q=" />
+                            <input type="text" id="new-engine-icon" class="setting-input"
+                                placeholder="<i class='fa-brands fa-...'></i>" />
+                            <button class="add-btn" id="add-engine-btn"><i class="fa-solid fa-plus"></i> Add
+                                Engine</button>
                         </div>
                     </div>
 
@@ -250,7 +274,7 @@
                             <i class="fa-solid fa-plus"></i> Add Category
                         </button>
                     </div>
-                    
+
                     <!-- Links Tab -->
                     <div class="settings-panel" data-panel="links">
                         <p class="panel-description">Select a category, then add links.</p>
@@ -267,7 +291,7 @@
                             <i class="fa-solid fa-plus"></i> Add Link
                         </button>
                     </div>
-                    
+
                     <!-- Social Links Tab -->
                     <div class="settings-panel" data-panel="social">
                         <p class="panel-description">Configure your social media links to display in the footer.</p>
@@ -275,11 +299,12 @@
                             <!-- Social links will be populated dynamically -->
                         </div>
                     </div>
-                    
+
                     <!-- Footer Tab -->
                     <div class="settings-panel" data-panel="footer">
-                        <p class="panel-description">Customize the footer layout by selecting what to display in each section.</p>
-                        
+                        <p class="panel-description">Customize the footer layout by selecting what to display in each
+                            section.</p>
+
                         <div class="setting-item">
                             <div class="setting-label">
                                 <i class="fa-solid fa-align-left"></i>
@@ -292,7 +317,7 @@
                                 <option value="quotes">Quotes</option>
                             </select>
                         </div>
-                        
+
                         <div class="setting-item">
                             <div class="setting-label">
                                 <i class="fa-solid fa-align-center"></i>
@@ -305,7 +330,7 @@
                                 <option value="quotes">Quotes</option>
                             </select>
                         </div>
-                        
+
                         <div class="setting-item">
                             <div class="setting-label">
                                 <i class="fa-solid fa-align-right"></i>
@@ -319,52 +344,60 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <!-- Help Tab -->
                     <div class="settings-panel" data-panel="help">
                         <section class="help-section">
                             <h4><i class="fa-solid fa-icons"></i> Customizing Icons</h4>
-                            <p>This startpage uses <a href="https://fontawesome.com/search?o=r&m=free" target="_blank">Font Awesome</a> icons. You can customize icons for categories and links in Settings.</p>
+                            <p>This startpage uses <a href="https://fontawesome.com/search?o=r&m=free"
+                                    target="_blank">Font Awesome</a> icons. You can customize icons for categories and
+                                links in Settings.</p>
                         </section>
-                        
+
                         <section class="help-section">
                             <h4><i class="fa-solid fa-magnifying-glass"></i> Step 1: Find an Icon</h4>
                             <ol class="help-steps">
-                                <li>Go to <a href="https://fontawesome.com/search?o=r&m=free" target="_blank">fontawesome.com/search</a></li>
+                                <li>Go to <a href="https://fontawesome.com/search?o=r&m=free"
+                                        target="_blank">fontawesome.com/search</a></li>
                                 <li>Type a keyword in the search box (e.g., "linux", "music", "cloud")</li>
-                                <li>Click the <strong>"Free"</strong> filter button on the right side to show only free icons</li>
+                                <li>Click the <strong>"Free"</strong> filter button on the right side to show only free
+                                    icons</li>
                                 <li>Click on the icon you want to use</li>
                             </ol>
                         </section>
-                        
+
                         <section class="help-section">
                             <h4><i class="fa-solid fa-copy"></i> Step 2: Copy the Icon Code</h4>
                             <ol class="help-steps">
                                 <li>After clicking an icon, a popup will appear</li>
-                                <li>Look for the HTML code that looks like: <code>&lt;i class="fa-brands fa-linux"&gt;&lt;/i&gt;</code></li>
+                                <li>Look for the HTML code that looks like:
+                                    <code>&lt;i class="fa-brands fa-linux"&gt;&lt;/i&gt;</code></li>
                                 <li>Copy <strong>only the class value</strong> — the part inside the quotes</li>
                                 <li>For example, copy: <code>fa-brands fa-linux</code></li>
                             </ol>
                         </section>
-                        
+
                         <section class="help-section">
                             <h4><i class="fa-solid fa-paste"></i> Step 3: Use in Settings</h4>
                             <ol class="help-steps">
-                                <li>Open Settings <i class="fa-solid fa-gear"></i> and go to the Categories or Links tab</li>
+                                <li>Open Settings <i class="fa-solid fa-gear"></i> and go to the Categories or Links tab
+                                </li>
                                 <li>Paste the icon code into the icon field (the first input box)</li>
                                 <li>You'll see a live preview of your icon appear</li>
                             </ol>
                         </section>
-                        
+
                         <section class="help-section">
                             <h4><i class="fa-solid fa-lightbulb"></i> Examples</h4>
                             <ul class="icon-examples">
                                 <li><code>fa-solid fa-code</code> → <i class="fa-solid fa-code"></i> (solid style)</li>
-                                <li><code>fa-brands fa-github</code> → <i class="fa-brands fa-github"></i> (brand logo)</li>
+                                <li><code>fa-brands fa-github</code> → <i class="fa-brands fa-github"></i> (brand logo)
+                                </li>
                                 <li><code>fa-solid fa-gamepad</code> → <i class="fa-solid fa-gamepad"></i></li>
                                 <li><code>fa-brands fa-spotify</code> → <i class="fa-brands fa-spotify"></i></li>
                             </ul>
-                            <p class="help-tip"><strong>Tip:</strong> Use <code>fa-solid</code> for general icons or <code>fa-brands</code> for company/brand logos.</p>
+                            <p class="help-tip"><strong>Tip:</strong> Use <code>fa-solid</code> for general icons or
+                                <code>fa-brands</code> for company/brand logos.</p>
                         </section>
                     </div>
                 </div>
@@ -378,11 +411,16 @@
                     <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
                     <input type="text" id="search" placeholder="Search the web..." autocomplete="off" autofocus>
                     <div class="search-engines">
-                        <button class="engine active" data-engine="google" title="Google"><i class="fa-brands fa-google"></i></button>
-                        <button class="engine" data-engine="duckduckgo" title="DuckDuckGo"><span class="nf-icon">󰇥</span></button>
-                        <button class="engine" data-engine="github" title="GitHub"><i class="fa-brands fa-github"></i></button>
-                        <button class="engine" data-engine="youtube" title="YouTube"><i class="fa-brands fa-youtube"></i></button>
+                        <button class="engine active" data-engine="google" title="Google"><i
+                                class="fa-brands fa-google"></i></button>
+                        <button class="engine" data-engine="duckduckgo" title="DuckDuckGo"><span
+                                class="nf-icon">󰇥</span></button>
+                        <button class="engine" data-engine="github" title="GitHub"><i
+                                class="fa-brands fa-github"></i></button>
+                        <button class="engine" data-engine="youtube" title="YouTube"><i
+                                class="fa-brands fa-youtube"></i></button>
                     </div>
+                    <div id="autocomplete-list" class="autocomplete-list"></div>
                 </div>
             </div>
             <div class="toolbar-btns">
@@ -411,11 +449,12 @@
             <span class="hint"><kbd>1-4</kbd> Engine</span>
             <span class="hint"><kbd>Esc</kbd> Clear</span>
         </div>
-        
+
         <!-- Developer Credits -->
         <div class="developer-credits">
             <div class="credits-content">
-                <span class="credits-text">made with love by <a href="https://motionkartik.github.io/" target="_blank" class="credits-link">motionkartik</a></span>
+                <span class="credits-text">made with love by <a href="https://motionkartik.github.io/" target="_blank"
+                        class="credits-link">motionkartik</a></span>
             </div>
         </div>
     </div>
@@ -424,4 +463,5 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>

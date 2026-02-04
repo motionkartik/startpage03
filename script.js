@@ -137,9 +137,9 @@ function loadSettings() {
         footerRight: 'quotes',
         socialLinks: []
     };
-    
+
     return {
-        userName: localStorage.getItem('userName') ??  defaults.userName,
+        userName: localStorage.getItem('userName') ?? defaults.userName,
         colorScheme: localStorage.getItem('colorScheme') ?? defaults.colorScheme,
         theme: localStorage.getItem('theme') ?? defaults.theme,
         colorMode: localStorage.getItem('colorMode') ?? defaults.colorMode,
@@ -150,7 +150,7 @@ function loadSettings() {
         enabledEngines: JSON.parse(localStorage.getItem('enabledEngines')) ?? defaults.enabledEngines,
         preferredEngine: localStorage.getItem('preferredEngine') ?? defaults.preferredEngine,
         weatherLocation: localStorage.getItem('weatherLocation') ?? defaults.weatherLocation,
-        openWeatherApiKey: localStorage.getItem('openWeatherApiKey') ??  defaults.openWeatherApiKey,
+        openWeatherApiKey: localStorage.getItem('openWeatherApiKey') ?? defaults.openWeatherApiKey,
         waqiApiKey: localStorage.getItem('waqiApiKey') ?? defaults.waqiApiKey,
         linkBehavior: localStorage.getItem('linkBehavior') ?? defaults.linkBehavior,
         showKeyboardHints: localStorage.getItem('showKeyboardHints') ?? defaults.showKeyboardHints,
@@ -222,7 +222,7 @@ function loadLinks() {
 }
 
 function saveLinks(lnks) {
-    localStorage.setItem('links', JSON. stringify(lnks));
+    localStorage.setItem('links', JSON.stringify(lnks));
 }
 
 // Initialize settings
@@ -281,14 +281,14 @@ let searchInput, timeElement, dateElement, greetingElement, weatherElement, quot
 
 function updateDateTime() {
     if (!timeElement || !dateElement) return;
-    
+
     const now = new Date();
-    
+
     let hours = now.getHours();
     const minutes = now.getMinutes().toString().padStart(2, '0');
     const seconds = now.getSeconds().toString().padStart(2, '0');
     let timeString;
-    
+
     if (settings.timeFormat === '12') {
         const period = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12 || 12;
@@ -304,20 +304,20 @@ function updateDateTime() {
             timeString = `${hours.toString().padStart(2, '0')}:${minutes}`;
         }
     }
-    
+
     timeElement.textContent = timeString;
-    
+
     const options = { weekday: 'long', month: 'short', day: 'numeric' };
     dateElement.textContent = now.toLocaleDateString('en-US', options);
-    
+
     updateGreeting(now.getHours());
 }
 
 function updateGreeting(hour) {
     if (!greetingElement) return;
-    
+
     let greeting, iconHtml;
-    
+
     if (hour >= 5 && hour < 12) {
         greeting = 'Good morning';
         iconHtml = '<span class="nf-icon">󰖜</span>';
@@ -331,10 +331,10 @@ function updateGreeting(hour) {
         greeting = 'Good night';
         iconHtml = '<i class="fa-solid fa-moon"></i>';
     }
-    
+
     const userName = settings.userName;
     greetingElement.textContent = userName ? `${greeting}, ${userName}` : greeting;
-    
+
     // NOTE: greeting icon will be managed by weather updates (showing current weather icon)
 }
 
@@ -344,7 +344,7 @@ function updateGreeting(hour) {
 
 function performSearch(query) {
     if (!query.trim()) return;
-    
+
     // Use Chrome Search API if available (respects user's default search engine)
     if (typeof chrome !== 'undefined' && chrome.search && chrome.search.query) {
         chrome.search.query({
@@ -385,7 +385,7 @@ function setSearchEngine(engine) {
 function renderSearchEngines() {
     const container = document.querySelector('.search-engines');
     if (!container) return;
-    
+
     const merged = getAllEnginesMerged();
     container.innerHTML = settings.enabledEngines.map((engineId, index) => {
         const engine = merged[engineId];
@@ -397,8 +397,8 @@ function renderSearchEngines() {
                 ${engine.icon}
             </button>
         `;
-    }). join('');
-    
+    }).join('');
+
     // Rebind click events
     container.querySelectorAll('.engine').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -406,7 +406,7 @@ function renderSearchEngines() {
             if (searchInput) searchInput.focus();
         });
     });
-    
+
     // Update keyboard hints
     updateKeyboardHints();
 }
@@ -502,7 +502,7 @@ function renderSearchEngineSettings() {
                         e.target.checked = true;
                         return;
                     }
-                    enabled.splice(idx,1);
+                    enabled.splice(idx, 1);
                 }
                 saveSettings('enabledEngines', enabled);
                 renderSearchEngineSettings();
@@ -537,10 +537,10 @@ function renderSearchEngineSettings() {
     if (addBtn) {
         addBtn.onclick = (e) => {
             e.preventDefault();
-            const id = (document.getElementById('new-engine-id')||{}).value?.trim();
-            const name = (document.getElementById('new-engine-name')||{}).value?.trim();
-            const url = (document.getElementById('new-engine-url')||{}).value?.trim();
-            const icon = (document.getElementById('new-engine-icon')||{}).value?.trim() || '<i class="fa-solid fa-magnifying-glass"></i>';
+            const id = (document.getElementById('new-engine-id') || {}).value?.trim();
+            const name = (document.getElementById('new-engine-name') || {}).value?.trim();
+            const url = (document.getElementById('new-engine-url') || {}).value?.trim();
+            const icon = (document.getElementById('new-engine-icon') || {}).value?.trim() || '<i class="fa-solid fa-magnifying-glass"></i>';
             if (!id || !name || !url) {
                 showNotification('Please provide id, name and url for the engine', 'error');
                 return;
@@ -560,7 +560,7 @@ function renderSearchEngineSettings() {
             renderSearchEngines();
             showNotification('Engine added', 'success');
             // clear form
-            ['new-engine-id','new-engine-name','new-engine-url','new-engine-icon'].forEach(k=>{const el=document.getElementById(k); if(el)el.value='';});
+            ['new-engine-id', 'new-engine-name', 'new-engine-url', 'new-engine-icon'].forEach(k => { const el = document.getElementById(k); if (el) el.value = ''; });
         };
     }
     // Ensure the add-engine toggle works while this panel is active (bind once)
@@ -606,9 +606,9 @@ function addSearchEnginePlaceholder() {
 }
 
 function updateKeyboardHints() {
-    const hintsContainer = document. querySelector('.keyboard-hints');
+    const hintsContainer = document.querySelector('.keyboard-hints');
     if (!hintsContainer) return;
-    
+
     // Show or hide keyboard hints based on setting
     if (settings.showKeyboardHints === 'false') {
         hintsContainer.style.display = 'none';
@@ -616,13 +616,13 @@ function updateKeyboardHints() {
     } else {
         hintsContainer.style.display = 'flex';
     }
-    
+
     const engineCount = settings.enabledEngines.length;
     const engineHint = engineCount > 1 ? `<kbd>1-${engineCount}</kbd> Engine` : '';
-    
+
     hintsContainer.innerHTML = `
         <span class="hint"><kbd>/</kbd> Search</span>
-        ${engineHint ?  `<span class="hint">${engineHint}</span>` : ''}
+        ${engineHint ? `<span class="hint">${engineHint}</span>` : ''}
         <span class="hint"><kbd>Esc</kbd> Clear</span>
     `;
 }
@@ -663,12 +663,12 @@ async function fetchWeather(query) {
         const response = await fetch(
             `https://api.openweathermap.org/data/2.5/weather?${query}&appid=${settings.openWeatherApiKey}&units=${unit}`
         );
-        
+
         if (!response.ok) {
             console.error('Weather API error:', response.status, response.statusText);
             throw new Error('Weather API error');
         }
-        
+
         const data = await response.json();
 
         // Get temperature, condition, and icon info
@@ -679,7 +679,7 @@ async function fetchWeather(query) {
         const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
         const tempUnit = unit === 'metric' ? '°C' : '°F';
-        
+
         // Get the parent widget and find the icon element
         const widgetElement = weatherElement.parentElement;
         if (widgetElement) {
@@ -689,7 +689,7 @@ async function fetchWeather(query) {
                 iconElement.innerHTML = `<img src="${iconUrl}" alt="" style="width:2em;height:2em;margin:-0.25em 0;vertical-align:middle;">`;
             }
         }
-        
+
         weatherElement.textContent = `${cityName}, ${temp}${tempUnit} ${condition}`;
         // Also update greeting icon to use the weather icon
         const greetingIcon = document.getElementById('greeting-icon');
@@ -750,7 +750,7 @@ async function fetchAQI(location) {
 
 function showMockWeather() {
     if (!weatherElement) return;
-    
+
     const mockWeatherData = [
         { tempF: 72, condition: 'Partly Cloudy', icon: 'fa-cloud-sun' },
         { tempF: 64, condition: 'Cloudy', icon: 'fa-cloud' },
@@ -761,9 +761,9 @@ function showMockWeather() {
         { tempF: 28, condition: 'Snow', icon: 'fa-snowflake' },
         { tempF: 55, condition: 'Windy', icon: 'fa-wind' }
     ];
-    
-    const weather = mockWeatherData[Math.floor(Math.random() * mockWeatherData. length)];
-    
+
+    const weather = mockWeatherData[Math.floor(Math.random() * mockWeatherData.length)];
+
     let temp, unit;
     if (settings.tempUnit === 'C') {
         temp = Math.round((weather.tempF - 32) * 5 / 9);
@@ -772,9 +772,9 @@ function showMockWeather() {
         temp = weather.tempF;
         unit = '°F';
     }
-    
+
     weatherElement.textContent = `${temp}${unit} ${weather.condition}`;
-    
+
     // Get the parent widget and find the icon element
     const widgetElement = weatherElement.parentElement;
     if (widgetElement) {
@@ -810,7 +810,7 @@ const quotes = [
 function updateQuote() {
     const quoteWidget = document.querySelector('.quote-widget');
     if (!quoteWidget || !quoteElement) return;
-    
+
     if (settings.showQuotes === 'true') {
         quoteWidget.style.display = 'flex';
         const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
@@ -827,28 +827,28 @@ function updateQuote() {
 function renderSocialLinks() {
     // Get or create social links container
     let socialWidget = document.querySelector('.social-widget');
-    
+
     if (!socialWidget) {
         socialWidget = document.createElement('div');
         socialWidget.className = 'widget social-widget';
         socialWidget.innerHTML = '<div class="social-icons"></div>';
     }
-    
+
     const iconsContainer = socialWidget.querySelector('.social-icons');
     if (!iconsContainer) return;
-    
+
     // Filter visible social links
     const visibleLinks = settings.socialLinks.filter(link => link.visible && link.url);
-    
+
     if (visibleLinks.length > 0) {
         const target = settings.linkBehavior === 'new-tab' ? '_blank' : (settings.linkBehavior === 'new-window' ? '_blank' : '_self');
         iconsContainer.innerHTML = visibleLinks.map(link => {
             return `<a href="${link.url}" target="${target}" title="${link.name}" class="social-icon" data-link-behavior="${settings.linkBehavior}"><i class="${link.icon}"></i></a>`;
         }).join('');
-        
+
         // Add click handlers for social links
         iconsContainer.querySelectorAll('.social-icon').forEach(link => {
-            link.addEventListener('click', function(e) {
+            link.addEventListener('click', function (e) {
                 const behavior = this.getAttribute('data-link-behavior');
                 if (behavior === 'new-tab' || behavior === 'new-window') {
                     e.preventDefault();
@@ -859,7 +859,7 @@ function renderSocialLinks() {
     } else {
         iconsContainer.innerHTML = '';
     }
-    
+
     return socialWidget;
 }
 
@@ -870,17 +870,17 @@ function renderSocialLinks() {
 function updateFooter() {
     const footer = document.querySelector('.footer');
     if (!footer) return;
-    
+
     // Clear existing content
     footer.innerHTML = '';
-    
+
     // Create sections based on settings
     const sections = [
         { position: 'left', setting: settings.footerLeft },
         { position: 'center', setting: settings.footerCenter },
         { position: 'right', setting: settings.footerRight }
     ];
-    
+
     sections.forEach(section => {
         const widget = createFooterWidget(section.setting);
         if (widget) {
@@ -900,7 +900,7 @@ function updateFooter() {
 
 function createFooterWidget(type) {
     if (type === 'blank') return null;
-    
+
     if (type === 'weather') {
         // If a weather widget already exists (e.g., header), do not create another in footer
         if (document.getElementById('weather')) return null;
@@ -917,7 +917,7 @@ function createFooterWidget(type) {
         }, 0);
         return widget;
     }
-    
+
     if (type === 'quotes') {
         const widget = document.createElement('div');
         widget.className = 'widget quote-widget';
@@ -932,11 +932,11 @@ function createFooterWidget(type) {
         }, 0);
         return widget;
     }
-    
+
     if (type === 'socials') {
         return renderSocialLinks();
     }
-    
+
     return null;
 }
 
@@ -944,15 +944,15 @@ function createFooterWidget(type) {
 
 function renderLinksGrid() {
     if (!linksGrid) return;
-    
+
     const colorMode = settings.colorMode;
     const linkTarget = settings.linkBehavior === 'new-tab' ? '_blank' : (settings.linkBehavior === 'new-window' ? '_blank' : '_self');
-    
+
     const visibleCategories = categories.filter(c => c.visible !== false);
     linksGrid.innerHTML = visibleCategories.map((category, index) => {
         const categoryLinks = (links[category.id] || []).filter(l => l.visible !== false);
         const colorClass = colorMode === 'multi' ? categoryColors[index % categoryColors.length] : 'mauve';
-        
+
         return `
             <section class="link-group" data-category="${category.id}" data-color="${colorClass}">
                 <h2 class="group-title">
@@ -970,10 +970,10 @@ function renderLinksGrid() {
             </section>
         `;
     }).join('');
-    
+
     // Add click handlers for link behavior
     document.querySelectorAll('.link-card').forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             const behavior = this.getAttribute('data-link-behavior');
             if (behavior === 'new-tab' || behavior === 'new-window') {
                 e.preventDefault();
@@ -982,7 +982,7 @@ function renderLinksGrid() {
             // 'same' uses target="_self" (default browser behavior)
         });
     });
-    
+
     updateGridLayout();
     // Initialize drag-and-drop on the main grid and per-category link lists
     initDragAndDropMain();
@@ -990,17 +990,17 @@ function renderLinksGrid() {
 
 function updateGridLayout() {
     if (!linksGrid) return;
-    
+
     const categoryCount = categories.filter(c => c.visible !== false).length;
-    
+
     linksGrid.classList.remove('grid-single', 'grid-even', 'grid-odd');
-    
+
     if (categoryCount === 1) {
-        linksGrid. classList.add('grid-single');
+        linksGrid.classList.add('grid-single');
     } else if (categoryCount % 2 === 0) {
         linksGrid.classList.add('grid-even');
     } else {
-        linksGrid.classList. add('grid-odd');
+        linksGrid.classList.add('grid-odd');
     }
 }
 
@@ -1010,9 +1010,9 @@ function initSettings() {
     const settingsBtn = document.getElementById('settings-btn');
     const settingsOverlay = document.getElementById('settings-overlay');
     const settingsClose = document.getElementById('settings-close');
-    
+
     if (!settingsBtn || !settingsOverlay || !settingsClose) return;
-    
+
     // Open settings
     settingsBtn.addEventListener('click', () => {
         settingsOverlay.classList.add('active');
@@ -1020,39 +1020,39 @@ function initSettings() {
         renderSearchEngineSettings();
         populateSettingsUI();
     });
-    
+
     // Close settings
     settingsClose.addEventListener('click', () => {
         settingsOverlay.classList.remove('active');
     });
-    
+
     // Close on overlay click
     settingsOverlay.addEventListener('click', (e) => {
         if (e.target === settingsOverlay) {
-            settingsOverlay.classList. remove('active');
+            settingsOverlay.classList.remove('active');
         }
     });
-    
+
     // Close on Escape key
-    document. addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            if (settingsOverlay.classList. contains('active')) {
+            if (settingsOverlay.classList.contains('active')) {
                 settingsOverlay.classList.remove('active');
             }
         }
     });
-    
+
     // Tab switching
     document.querySelectorAll('.settings-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             const tabId = tab.dataset.tab;
-            
+
             document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active'));
-            
+
             tab.classList.add('active');
             document.querySelector(`[data-panel="${tabId}"]`).classList.add('active');
-            
+
             if (tabId === 'categories') {
                 renderCategoriesSettings();
             } else if (tabId === 'links') {
@@ -1068,16 +1068,16 @@ function initSettings() {
             }
         });
     });
-    
+
     // Toggle button handlers
     document.querySelectorAll('.toggle-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const setting = btn.dataset. setting;
+            const setting = btn.dataset.setting;
             const value = btn.dataset.value;
-            
+
             saveSettings(setting, value);
             updateToggleStates();
-            
+
             if (setting === 'colorScheme') {
                 applyColorScheme(value);
             } else if (setting === 'theme') {
@@ -1101,7 +1101,7 @@ function initSettings() {
             }
         });
     });
-    
+
     // Name input handler
     const nameInput = document.getElementById('setting-name');
     if (nameInput) {
@@ -1110,7 +1110,7 @@ function initSettings() {
             updateGreeting(new Date().getHours());
         });
     }
-    
+
     // Color scheme dropdown handler
     const colorSchemeSelect = document.getElementById('color-scheme-select');
     if (colorSchemeSelect) {
@@ -1118,27 +1118,27 @@ function initSettings() {
             applyColorScheme(e.target.value);
         });
     }
-    
+
     // Weather location input handler
     const locationInput = document.getElementById('setting-weather-location');
     if (locationInput) {
         locationInput.addEventListener('input', (e) => {
             saveSettings('weatherLocation', e.target.value);
         });
-        
+
         // Update weather when user finishes typing (on blur)
         locationInput.addEventListener('blur', () => {
             updateWeather();
         });
     }
-    
+
     // OpenWeather API key input handler
     const apiKeyInput = document.getElementById('setting-weather-api-key');
     if (apiKeyInput) {
         apiKeyInput.addEventListener('input', (e) => {
             saveSettings('openWeatherApiKey', e.target.value.trim());
         });
-        
+
         // Update weather when user finishes typing (on blur)
         apiKeyInput.addEventListener('blur', () => {
             updateWeather();
@@ -1156,33 +1156,33 @@ function initSettings() {
             updateWeather();
         });
     }
-    
+
     // Search engine checkboxes are handled by renderSearchEngineSettings()
-    
+
     // Add category button
     const addCategoryBtn = document.getElementById('add-category-btn');
     if (addCategoryBtn) {
         addCategoryBtn.addEventListener('click', addCategory);
     }
-    
+
     // Add link button
     const addLinkBtn = document.getElementById('add-link-btn');
     if (addLinkBtn) {
         addLinkBtn.addEventListener('click', addLink);
     }
-    
+
     // Category selector for links
     const linkCategorySelect = document.getElementById('link-category-select');
     if (linkCategorySelect) {
         linkCategorySelect.addEventListener('change', (e) => {
-            const addLinkBtn = document. getElementById('add-link-btn');
+            const addLinkBtn = document.getElementById('add-link-btn');
             if (addLinkBtn) {
                 addLinkBtn.disabled = !e.target.value;
             }
             renderLinksForCategory(e.target.value);
         });
     }
-    
+
     updateToggleStates();
 }
 
@@ -1192,19 +1192,19 @@ function populateSettingsUI() {
     if (nameInput) {
         nameInput.value = settings.userName;
     }
-    
+
     // Populate color scheme dropdown
     const colorSchemeSelect = document.getElementById('color-scheme-select');
     if (colorSchemeSelect) {
         colorSchemeSelect.value = settings.colorScheme;
     }
-    
+
     // Populate weather location input
     const locationInput = document.getElementById('setting-weather-location');
     if (locationInput) {
         locationInput.value = settings.weatherLocation;
     }
-    
+
     // Populate OpenWeather API key input
     const apiKeyInput = document.getElementById('setting-weather-api-key');
     if (apiKeyInput) {
@@ -1215,12 +1215,12 @@ function populateSettingsUI() {
     if (waqiKeyInput) {
         waqiKeyInput.value = settings.waqiApiKey || '';
     }
-    
+
     // Populate search engine checkboxes
     document.querySelectorAll('#search-engine-options input').forEach(checkbox => {
         checkbox.checked = settings.enabledEngines.includes(checkbox.dataset.engine);
     });
-    
+
     updateToggleStates();
 }
 
@@ -1237,9 +1237,9 @@ function updateToggleStates() {
 function renderCategoriesSettings() {
     const container = document.getElementById('categories-list');
     const addBtn = document.getElementById('add-category-btn');
-    
+
     if (!container) return;
-    
+
     container.innerHTML = categories.map((category, index) => `
         <div class="category-item" data-id="${category.id}">
             <label class="category-checkbox">
@@ -1253,11 +1253,11 @@ function renderCategoriesSettings() {
             </button>
         </div>
     `).join('');
-    
+
     if (addBtn) {
         addBtn.disabled = categories.length >= 1001;
     }
-    
+
     // Bind events
     container.querySelectorAll('.category-item').forEach(item => {
         const categoryId = item.dataset.id;
@@ -1275,17 +1275,17 @@ function renderCategoriesSettings() {
                 }
             });
         }
-        
+
         item.querySelectorAll('input').forEach(input => {
             input.addEventListener('input', () => {
-                const field = input.dataset. field;
+                const field = input.dataset.field;
                 const category = categories.find(c => c.id === categoryId);
                 if (category) {
                     category[field] = input.value;
                     saveCategories(categories);
                     renderLinksGrid();
                     updateLinkCategorySelect();
-                    
+
                     // Update icon preview
                     if (field === 'icon' && iconPreview) {
                         iconPreview.className = input.value || 'fa-solid fa-folder';
@@ -1293,8 +1293,8 @@ function renderCategoriesSettings() {
                 }
             });
         });
-        
-        item.querySelector('.delete-btn'). addEventListener('click', () => {
+
+        item.querySelector('.delete-btn').addEventListener('click', () => {
             if (categories.length > 1) {
                 deleteCategory(categoryId);
             }
@@ -1307,7 +1307,7 @@ function renderCategoriesSettings() {
 
 function addCategory() {
     if (categories.length >= 1001) return;
-    
+
     const newId = 'cat_' + Date.now();
     categories.push({
         id: newId,
@@ -1315,7 +1315,7 @@ function addCategory() {
         icon: 'fa-solid fa-folder'
     });
     links[newId] = [];
-    
+
     saveCategories(categories);
     saveLinks(links);
     renderCategoriesSettings();
@@ -1324,9 +1324,9 @@ function addCategory() {
 }
 
 function deleteCategory(categoryId) {
-    categories = categories. filter(c => c.id !== categoryId);
+    categories = categories.filter(c => c.id !== categoryId);
     delete links[categoryId];
-    
+
     saveCategories(categories);
     saveLinks(links);
     renderCategoriesSettings();
@@ -1368,7 +1368,7 @@ function renderLinksSettings() {
     updateLinkCategorySelect();
     const select = document.getElementById('link-category-select');
     if (select && select.value) {
-        renderLinksForCategory(select. value);
+        renderLinksForCategory(select.value);
     } else {
         const container = document.getElementById('links-list');
         if (container) container.innerHTML = '';
@@ -1378,31 +1378,31 @@ function renderLinksSettings() {
 function updateLinkCategorySelect() {
     const select = document.getElementById('link-category-select');
     if (!select) return;
-    
+
     const currentValue = select.value;
-    
+
     select.innerHTML = '<option value="">-- Select a category --</option>' +
         categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-    
-    if (categories.find(c => c. id === currentValue)) {
-        select. value = currentValue;
+
+    if (categories.find(c => c.id === currentValue)) {
+        select.value = currentValue;
     }
 }
 
 function renderLinksForCategory(categoryId) {
     const container = document.getElementById('links-list');
     const addBtn = document.getElementById('add-link-btn');
-    
+
     if (!container) return;
-    
+
     if (!categoryId) {
         container.innerHTML = '';
         if (addBtn) addBtn.disabled = true;
         return;
     }
-    
+
     const categoryLinks = links[categoryId] || [];
-    
+
     container.innerHTML = categoryLinks.map((link, index) => `
         <div class="link-item" data-index="${index}" data-link-id="${link.id}">
             <label class="link-checkbox">
@@ -1417,11 +1417,11 @@ function renderLinksForCategory(categoryId) {
             </button>
         </div>
     `).join('');
-    
+
     if (addBtn) {
         addBtn.disabled = categoryLinks.length >= 1001;
     }
-    
+
     // Bind events
     container.querySelectorAll('.link-item').forEach(item => {
         const index = parseInt(item.dataset.index);
@@ -1430,26 +1430,26 @@ function renderLinksForCategory(categoryId) {
         const checkbox = item.querySelector('.link-checkbox input');
         const nameInput = item.querySelector('input[data-field="name"]');
         const urlInput = item.querySelector('input[data-field="url"]');
-        
+
         // Track if the user has manually edited the name field
         let nameEdited = false;
-        
+
         item.querySelectorAll('input').forEach(input => {
             const field = input.dataset.field;
-            
+
             // Track manual name edits
             if (field === 'name') {
                 input.addEventListener('input', () => {
                     nameEdited = true;
                 });
             }
-            
+
             // URL input: trigger autofill of name if not manually edited
             if (field === 'url') {
                 input.addEventListener('input', () => {
                     if (links[categoryId] && links[categoryId][index]) {
                         links[categoryId][index][field] = input.value;
-                        
+
                         // Auto-fill name only if user hasn't manually edited it
                         if (!nameEdited && nameInput) {
                             const autoName = getNameFromUrl(input.value);
@@ -1458,7 +1458,7 @@ function renderLinksForCategory(categoryId) {
                                 links[categoryId][index].name = autoName;
                             }
                         }
-                        
+
                         saveLinks(links);
                         renderLinksGrid();
                     }
@@ -1469,7 +1469,7 @@ function renderLinksForCategory(categoryId) {
                         links[categoryId][index][field] = input.value;
                         saveLinks(links);
                         renderLinksGrid();
-                        
+
                         // Update icon preview
                         if (field === 'icon' && iconPreview) {
                             iconPreview.className = input.value || 'fa-solid fa-link';
@@ -1487,8 +1487,8 @@ function renderLinksForCategory(categoryId) {
                 }
             });
         }
-        
-        item.querySelector('.delete-btn'). addEventListener('click', () => {
+
+        item.querySelector('.delete-btn').addEventListener('click', () => {
             deleteLink(categoryId, index);
         });
     });
@@ -1499,21 +1499,21 @@ function renderLinksForCategory(categoryId) {
 
 function addLink() {
     const select = document.getElementById('link-category-select');
-    const categoryId = select ?  select.value : null;
+    const categoryId = select ? select.value : null;
     if (!categoryId) return;
-    
+
     if (!links[categoryId]) {
         links[categoryId] = [];
     }
-    
+
     if (links[categoryId].length >= 1001) return;
-    
+
     links[categoryId].push({
         name: '', // Start with empty name to allow autofill
         url: 'https://',
         icon: 'fa-solid fa-link'
     });
-    
+
     saveLinks(links);
     renderLinksForCategory(categoryId);
     renderLinksGrid();
@@ -1521,7 +1521,7 @@ function addLink() {
 
 function deleteLink(categoryId, index) {
     if (links[categoryId]) {
-        links[categoryId]. splice(index, 1);
+        links[categoryId].splice(index, 1);
         saveLinks(links);
         renderLinksForCategory(categoryId);
         renderLinksGrid();
@@ -1555,11 +1555,11 @@ function initializeSocialLinks() {
 function renderSocialLinksSettings() {
     const container = document.getElementById('social-links-list');
     if (!container) return;
-    
+
     if (!settings.socialLinks || settings.socialLinks.length === 0) {
         initializeSocialLinks();
     }
-    
+
     container.innerHTML = settings.socialLinks.map((social, index) => `
         <div class="social-link-item" data-index="${index}">
             <label class="social-checkbox">
@@ -1570,7 +1570,7 @@ function renderSocialLinksSettings() {
             <input type="url" class="social-url-input" value="${social.url || ''}" placeholder="https://..." data-index="${index}">
         </div>
     `).join('');
-    
+
     // Bind events
     container.querySelectorAll('.social-checkbox input').forEach(checkbox => {
         checkbox.addEventListener('change', (e) => {
@@ -1580,7 +1580,7 @@ function renderSocialLinksSettings() {
             updateFooter();
         });
     });
-    
+
     container.querySelectorAll('.social-url-input').forEach(input => {
         input.addEventListener('input', (e) => {
             const index = parseInt(e.target.dataset.index);
@@ -1600,7 +1600,7 @@ function renderFooterSettings() {
     const footerLeftSelect = document.getElementById('footer-left-select');
     const footerCenterSelect = document.getElementById('footer-center-select');
     const footerRightSelect = document.getElementById('footer-right-select');
-    
+
     if (footerLeftSelect) {
         footerLeftSelect.value = settings.footerLeft;
         footerLeftSelect.addEventListener('change', (e) => {
@@ -1608,7 +1608,7 @@ function renderFooterSettings() {
             updateFooter();
         });
     }
-    
+
     if (footerCenterSelect) {
         footerCenterSelect.value = settings.footerCenter;
         footerCenterSelect.addEventListener('change', (e) => {
@@ -1616,7 +1616,7 @@ function renderFooterSettings() {
             updateFooter();
         });
     }
-    
+
     if (footerRightSelect) {
         footerRightSelect.value = settings.footerRight;
         footerRightSelect.addEventListener('change', (e) => {
@@ -1632,18 +1632,18 @@ function renderFooterSettings() {
 
 function handleKeyboard(event) {
     const settingsOverlay = document.getElementById('settings-overlay');
-    const isSettingsOpen = settingsOverlay && settingsOverlay. classList.contains('active');
-    
+    const isSettingsOpen = settingsOverlay && settingsOverlay.classList.contains('active');
+
     if (event.key === '/' && document.activeElement !== searchInput && !isSettingsOpen) {
         event.preventDefault();
         if (searchInput) searchInput.focus();
     }
-    
+
     if (event.key === 'Escape' && searchInput) {
         searchInput.value = '';
         searchInput.blur();
     }
-    
+
     // Dynamic engine switching based on enabled engines
     if (document.activeElement !== searchInput && !isSettingsOpen) {
         const num = parseInt(event.key);
@@ -1670,23 +1670,23 @@ function initEventListeners() {
             }
         });
     }
-    
+
     document.addEventListener('keydown', handleKeyboard);
-    
+
     // Backup & Restore buttons
     const backupBtn = document.getElementById('backup-button');
     const restoreBtn = document.getElementById('restore-button');
     const restoreFileInput = document.getElementById('restore-file-input');
-    
+
     if (backupBtn) {
         backupBtn.addEventListener('click', exportSettings);
     }
-    
+
     if (restoreBtn && restoreFileInput) {
         restoreBtn.addEventListener('click', () => {
             restoreFileInput.click();
         });
-        
+
         restoreFileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -1706,12 +1706,12 @@ const commands = {
     'theme dark': () => applyTheme('dark'),
     'theme light': () => applyTheme('light'),
     'new tab': () => window.open('about:blank', '_blank'),
-    'github': () => window. location.href = 'https://github.com',
+    'github': () => window.location.href = 'https://github.com',
     'settings': () => document.getElementById('settings-overlay').classList.add('active'),
 };
 
 function executeCommand(input) {
-    const cmd = input.toLowerCase(). trim();
+    const cmd = input.toLowerCase().trim();
     if (cmd.startsWith(':')) {
         const command = cmd.slice(1);
         if (commands[command]) {
@@ -1732,8 +1732,8 @@ function init() {
     greetingElement = document.getElementById('greeting');
     weatherElement = document.getElementById('weather');
     quoteElement = document.getElementById('quote');
-    linksGrid = document. getElementById('links-grid');
-    
+    linksGrid = document.getElementById('links-grid');
+
     // Hide "New Window" option on Safari (it behaves the same as "New Tab")
     if (isSafari) {
         const newWindowBtn = document.getElementById('new-window-btn');
@@ -1745,15 +1745,15 @@ function init() {
             }
         }
     }
-    
+
     // Render dynamic content
     renderLinksGrid();
     renderSearchEngines();
-    
+
     // Update time immediately and every second
     updateDateTime();
     setInterval(updateDateTime, 1000);
-    
+
     // Add click handler to time element to toggle format
     if (timeElement) {
         timeElement.style.cursor = 'pointer';
@@ -1765,34 +1765,37 @@ function init() {
             updateToggleStates();
         });
     }
-    
+
     // Update weather
     updateWeather();
     setInterval(updateWeather, 600000);
-    
+
     // Set random quote
     updateQuote();
-    
+
     // Update footer layout
     updateFooter();
-    
+
     // Restore preferred search engine
     if (settings.enabledEngines.includes(settings.preferredEngine)) {
         setSearchEngine(settings.preferredEngine);
     } else if (settings.enabledEngines.length > 0) {
         setSearchEngine(settings.enabledEngines[0]);
     }
-    
+
     // Initialize event listeners
     initEventListeners();
-    
+
     // Initialize settings
     initSettings();
-    
+
     // Focus search input after a brief delay
     setTimeout(() => {
         if (searchInput) searchInput.focus();
     }, 700);
+
+    // Initialize Autocomplete
+    initAutocomplete();
 }
 
 // Drag & drop (SortableJS) integration
@@ -1943,7 +1946,7 @@ function exportSettings() {
         categories: localStorage.getItem('categories'),
         links: localStorage.getItem('links')
     };
-    
+
     // Create and download file
     const dataStr = JSON.stringify(exportData, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
@@ -1955,35 +1958,35 @@ function exportSettings() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    
+
     // Show confirmation
     showNotification('Settings exported successfully!', 'success');
 }
 
 function importSettings(file) {
     const reader = new FileReader();
-    
-    reader.onload = function(e) {
+
+    reader.onload = function (e) {
         try {
             const importData = JSON.parse(e.target.result);
-            
+
             // Validate data structure
             if (!importData.version || !importData.settings) {
                 throw new Error('Invalid backup file format');
             }
-            
+
             // Confirm before overwriting
             if (!confirm('This will replace all your current settings, categories, and links. Continue?')) {
                 return;
             }
-            
+
             // Import settings
             Object.entries(importData.settings).forEach(([key, value]) => {
                 if (value !== null && value !== undefined) {
                     localStorage.setItem(key, value);
                 }
             });
-            
+
             // Import categories and links
             if (importData.categories) {
                 localStorage.setItem('categories', importData.categories);
@@ -1991,18 +1994,18 @@ function importSettings(file) {
             if (importData.links) {
                 localStorage.setItem('links', importData.links);
             }
-            
+
             // Show success message and reload
             showNotification('Settings imported successfully! Reloading...', 'success');
             setTimeout(() => {
                 location.reload();
             }, 1500);
-            
+
         } catch (error) {
             showNotification('Error importing settings: ' + error.message, 'error');
         }
     };
-    
+
     reader.readAsText(file);
 }
 
@@ -2024,9 +2027,9 @@ function showNotification(message, type = 'info') {
         z-index: 10000;
         animation: slideIn 0.3s ease-out;
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     // Remove after 3 seconds
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease-out';
@@ -2041,3 +2044,150 @@ function showNotification(message, type = 'info') {
 // ========================================
 
 document.addEventListener('DOMContentLoaded', init);
+
+// ========================================
+// Autocomplete Functions
+// ========================================
+
+const autocompleteList = document.getElementById('autocomplete-list');
+let currentFocus = -1;
+
+// Debounce helper
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const context = this;
+        const later = () => {
+            clearTimeout(timeout);
+            func.apply(context, args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// JSONP helper
+function jsonp(url, callbackName) {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        const name = callbackName || 'jsonp_callback_' + Math.round(100000 * Math.random());
+
+        if (url.match(/\?/)) url += '&callback=' + name;
+        else url += '?callback=' + name;
+
+        window[name] = function (data) {
+            delete window[name];
+            document.body.removeChild(script);
+            resolve(data);
+        };
+
+        script.src = url;
+        script.onerror = reject;
+        document.body.appendChild(script);
+    });
+}
+
+function closeAutocomplete() {
+    if (autocompleteList) {
+        autocompleteList.innerHTML = '';
+        currentFocus = -1;
+    }
+}
+
+function addActive(x) {
+    if (!x) return false;
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    x[currentFocus].classList.add("active");
+    // Scroll to active item if needed
+    x[currentFocus].scrollIntoView({ block: 'nearest' });
+}
+
+function removeActive(x) {
+    for (var i = 0; i < x.length; i++) {
+        x[i].classList.remove("active");
+    }
+}
+
+async function fetchSuggestions(query) {
+    console.log("Fetching suggestions for:", query);
+    if (!query) {
+        closeAutocomplete();
+        return;
+    }
+
+    // Only use Google suggestions if Google is the current engine (optional, but makes sense for "Google Autocomplete")
+    // For now, we'll use it generally or check currentEngine. 
+    // The user asked for "Google Search Autocomplete", implying the source is Google.
+
+    try {
+        console.log("Sending JSONP request...");
+        const data = await jsonp(`https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}`);
+        console.log("JSONP response:", data);
+        // data format: ["query", ["suggestion1", "suggestion2", ...]]
+        if (data && data[1]) {
+            renderSuggestions(data[1]);
+        }
+    } catch (e) {
+        console.error("Autocomplete error:", e);
+    }
+}
+
+function renderSuggestions(suggestions) {
+    if (!autocompleteList) return;
+    autocompleteList.innerHTML = '';
+
+    suggestions.forEach(suggestion => {
+        const div = document.createElement('div');
+        div.className = 'autocomplete-item';
+        div.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> <span>${suggestion}</span>`; // simple bolding could be added here
+        div.addEventListener('click', function () {
+            if (searchInput) {
+                searchInput.value = suggestion;
+                performSearch(suggestion);
+                closeAutocomplete();
+            }
+        });
+        autocompleteList.appendChild(div);
+    });
+}
+
+// Attach event listeners to search input
+function initAutocomplete() {
+    if (searchInput) {
+        // Input event for fetching suggestions
+        searchInput.addEventListener('input', debounce(function (e) {
+            fetchSuggestions(e.target.value);
+        }, 200)); // 200ms debounce
+
+        // Keydown for navigation
+        searchInput.addEventListener('keydown', function (e) {
+            let x = autocompleteList ? autocompleteList.getElementsByTagName('div') : null;
+            if (e.key === "ArrowDown") {
+                currentFocus++;
+                addActive(x);
+            } else if (e.key === "ArrowUp") {
+                currentFocus--;
+                addActive(x);
+            } else if (e.key === "Enter") {
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    if (x) x[currentFocus].click();
+                } else {
+                    performSearch(this.value);
+                    closeAutocomplete();
+                }
+            } else if (e.key === "Escape") {
+                closeAutocomplete();
+            }
+        });
+
+        // Close when clicking elsewhere
+        document.addEventListener("click", function (e) {
+            if (e.target !== searchInput && e.target !== autocompleteList) {
+                closeAutocomplete();
+            }
+        });
+    }
+}
