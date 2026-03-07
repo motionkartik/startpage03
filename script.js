@@ -959,7 +959,7 @@ function renderLinksGrid() {
                     <span class="title-icon"><i class="${category.icon}"></i></span>
                     ${category.name}
                 </h2>
-                <div class="links">
+                <div class="links ${categoryLinks.length === 1 ? 'single-link' : ''}">
                     ${categoryLinks.map(link => `
                                     <a href="${link.url}" class="link-card" target="${linkTarget}" data-link-behavior="${settings.linkBehavior}" data-link-id="${link.id}">
                             <span class="link-icon"><i class="${link.icon || 'fa-solid fa-link'}"></i></span>

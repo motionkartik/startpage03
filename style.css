@@ -1168,7 +1168,6 @@ body {
     justify-self: start;
     margin-top: 0.25rem;
 }
-}
 
 .header-right {
     display: flex;
@@ -2071,6 +2070,11 @@ body {
     align-content: start;
 }
 
+.links.single-link {
+    display: flex;
+    justify-content: center;
+}
+
 .link-card {
     display: flex;
     align-items: center;
@@ -2126,6 +2130,23 @@ body {
     font-size: 0.9rem;
     font-weight: 500;
     white-space: nowrap;
+}
+
+/* If the links grid has an odd number of items, make the final lone
+   link span both columns and center it so it appears symmetrical. */
+.links > .link-card:nth-last-child(1):nth-child(odd) {
+    /* span both grid columns */
+    grid-column: 1 / -1;
+    /* fill the spanned columns instead of staying narrow */
+    justify-self: stretch;
+    width: 100%;
+    max-width: none;
+    /* center the icon+text horizontally inside the card */
+    justify-content: center;
+}
+
+.links > .link-card:nth-last-child(1):nth-child(odd) .link-text {
+    text-align: center;
 }
 
 /* Help Modal */
