@@ -21,64 +21,65 @@
         </div>
 
         <!-- Header with greeting and time -->
-        <header class="header">
+        <header class="header" role="banner">
             <div class="greeting-block">
                 <div class="greeting">
-                    <span class="icon" id="greeting-icon"><i class="fa-solid fa-sun"></i></span>
-                    <span class="greeting-text" id="greeting">Good evening, Bryan</span>
+                    <span class="icon" id="greeting-icon" aria-hidden="true"><i class="fa-solid fa-sun"></i></span>
+                    <h1 class="greeting-text" id="greeting">Good evening, Bryan</h1>
                 </div>
                 <!-- Weather widget moved here (stacked below greeting) -->
-                <div class="widget weather-widget header-weather">
-                    <span class="widget-icon" id="header-weather-icon"><i class="fa-solid fa-cloud-sun"></i></span>
+                <div class="widget weather-widget header-weather" aria-label="Current weather">
+                    <span class="widget-icon" id="header-weather-icon" aria-hidden="true"><i class="fa-solid fa-cloud-sun"></i></span>
                     <span class="widget-text" id="weather">Loading...</span>
                 </div>
             </div>
             <div class="header-right">
-                <div class="datetime">
-                    <span class="time" id="time">00:00</span>
+                <div class="datetime" aria-label="Current time and date">
+                    <span class="time" id="time" role="timer" aria-live="off">00:00</span>
                     <span class="date" id="date">Thursday, Nov 28</span>
                 </div>
             </div>
         </header>
 
         <!-- Settings Modal -->
-        <div class="settings-overlay" id="settings-overlay">
+        <div class="settings-overlay" id="settings-overlay" role="dialog" aria-modal="true" aria-labelledby="settings-title">
             <div class="settings-modal">
                 <div class="settings-header">
-                    <h3><i class="fa-solid fa-gear"></i> Settings</h3>
-                    <button class="settings-close" id="settings-close">
+                    <h3 id="settings-title"><i class="fa-solid fa-gear" aria-hidden="true"></i> Settings</h3>
+                    <button class="settings-close" id="settings-close" aria-label="Close settings">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
 
                 <!-- Settings Tabs -->
-                <div class="settings-tabs">
-                    <button class="settings-tab active" data-tab="general">
-                        <i class="fa-solid fa-sliders"></i> General
+                <nav class="settings-tabs" role="tablist" aria-label="Settings categories">
+                    <button class="settings-tab active" data-tab="general" role="tab" aria-selected="true" aria-controls="panel-general" id="tab-general">
+                        <i class="fa-solid fa-sliders" aria-hidden="true"></i> General
                     </button>
-                    <button class="settings-tab" data-tab="categories">
-                        <i class="fa-solid fa-folder"></i> Categories
+                    <button class="settings-tab" data-tab="categories" role="tab" aria-selected="false" aria-controls="panel-categories" id="tab-categories">
+                        <i class="fa-solid fa-folder" aria-hidden="true"></i> Categories
                     </button>
-                    <button class="settings-tab" data-tab="links">
-                        <i class="fa-solid fa-link"></i> Links
+                    <button class="settings-tab" data-tab="links" role="tab" aria-selected="false" aria-controls="panel-links" id="tab-links">
+                        <i class="fa-solid fa-link" aria-hidden="true"></i> Links
                     </button>
-                    <button class="settings-tab" data-tab="social">
-                        <i class="fa-solid fa-share-nodes"></i> Social
+                    <button class="settings-tab" data-tab="social" role="tab" aria-selected="false" aria-controls="panel-social" id="tab-social">
+                        <i class="fa-solid fa-share-nodes" aria-hidden="true"></i> Social
                     </button>
-                    <button class="settings-tab" data-tab="search-engines">
-                        <i class="fa-solid fa-magnifying-glass"></i> Search Engines
+
+                    <button class="settings-tab" data-tab="search-engines" role="tab" aria-selected="false" aria-controls="panel-search-engines" id="tab-search-engines">
+                        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Search Engines
                     </button>
-                    <button class="settings-tab" data-tab="footer">
-                        <i class="fa-solid fa-align-justify"></i> Footer
+                    <button class="settings-tab" data-tab="footer" role="tab" aria-selected="false" aria-controls="panel-footer" id="tab-footer">
+                        <i class="fa-solid fa-align-justify" aria-hidden="true"></i> Footer
                     </button>
-                    <button class="settings-tab" data-tab="help">
-                        <i class="fa-solid fa-circle-question"></i> Help
+                    <button class="settings-tab" data-tab="help" role="tab" aria-selected="false" aria-controls="panel-help" id="tab-help">
+                        <i class="fa-solid fa-circle-question" aria-hidden="true"></i> Help
                     </button>
-                </div>
+                </nav>
 
                 <div class="settings-body">
                     <!-- General Tab -->
-                    <div class="settings-panel active" data-panel="general">
+                    <div class="settings-panel active" data-panel="general" role="tabpanel" id="panel-general" aria-labelledby="tab-general">
                         <div class="setting-item">
                             <div class="setting-label">
                                 <i class="fa-solid fa-user"></i>
@@ -223,6 +224,21 @@
 
                         <!-- Search Engines moved to its own panel -->
 
+                        <div class="setting-item">
+                            <div class="setting-label">
+                                <i class="fa-solid fa-list-check"></i>
+                                <span>Todo Sidebar</span>
+                            </div>
+                            <div class="setting-toggle">
+                                <button class="toggle-btn" data-setting="showTodoSidebar" data-value="true"><i
+                                        class="fa-solid fa-eye"></i> Show</button>
+                                <button class="toggle-btn" data-setting="showTodoSidebar" data-value="false"><i
+                                        class="fa-solid fa-eye-slash"></i> Hide</button>
+                            </div>
+                        </div>
+
+
+
                         <div class="setting-item setting-item-vertical">
                             <div class="setting-label">
                                 <i class="fa-solid fa-download"></i>
@@ -293,15 +309,17 @@
                     </div>
 
                     <!-- Social Links Tab -->
-                    <div class="settings-panel" data-panel="social">
+                    <div class="settings-panel" data-panel="social" role="tabpanel" id="panel-social" aria-labelledby="tab-social">
                         <p class="panel-description">Configure your social media links to display in the footer.</p>
-                        <div class="social-links-list" id="social-links-list">
+                        <div class="social-links-list" id="social-links-list" role="list">
                             <!-- Social links will be populated dynamically -->
                         </div>
                     </div>
 
+
+
                     <!-- Footer Tab -->
-                    <div class="settings-panel" data-panel="footer">
+                    <div class="settings-panel" data-panel="footer" role="tabpanel" id="panel-footer" aria-labelledby="tab-footer">
                         <p class="panel-description">Customize the footer layout by selecting what to display in each
                             section.</p>
 
@@ -315,6 +333,7 @@
                                 <option value="weather">Weather</option>
                                 <option value="socials">Social Links</option>
                                 <option value="quotes">Quotes</option>
+                                <option value="todos">Todos</option>
                             </select>
                         </div>
 
@@ -328,6 +347,7 @@
                                 <option value="weather">Weather</option>
                                 <option value="socials">Social Links</option>
                                 <option value="quotes">Quotes</option>
+                                <option value="todos">Todos</option>
                             </select>
                         </div>
 
@@ -341,6 +361,7 @@
                                 <option value="weather">Weather</option>
                                 <option value="socials">Social Links</option>
                                 <option value="quotes">Quotes</option>
+                                <option value="todos">Todos</option>
                             </select>
                         </div>
                     </div>
@@ -424,10 +445,19 @@
                 </div>
             </div>
             <div class="toolbar-btns">
-                <button class="toolbar-btn" id="settings-btn" title="Settings">
+                <div class="google-apps-container">
+                    <button class="toolbar-btn" id="google-apps-btn" title="Google Apps" aria-label="Google Apps">
+                        <i class="fa-solid fa-table-cells"></i>
+                    </button>
+                    <div class="google-apps-dropdown" id="google-apps-dropdown" role="menu">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                <button class="toolbar-btn" id="settings-btn" title="Settings" aria-label="Settings">
                     <i class="fa-solid fa-gear"></i>
                 </button>
             </div>
+
         </div>
 
         <!-- Quick Links Grid -->

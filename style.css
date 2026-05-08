@@ -976,8 +976,91 @@ body {
 
 .toolbar-btns {
     display: flex;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-sm);
+    align-items: center;
+    position: relative;
 }
+
+.toolbar-btn.active {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: rgba(203, 166, 247, 0.1);
+}
+
+.google-apps-container {
+    position: relative;
+}
+
+.google-apps-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 320px;
+    background: var(--glass-bg2);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(20px);
+    box-shadow: var(--glass-shadow);
+    padding: var(--spacing-lg);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all var(--transition-normal);
+}
+
+.google-apps-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.google-app-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--text);
+    transition: all var(--transition-fast);
+}
+
+.google-app-item:hover {
+    background: var(--surface0);
+}
+
+.google-app-icon {
+    font-size: 1.8rem;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.google-app-name {
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Custom icon colors for Google Apps */
+.google-app-item[data-app="search"] .google-app-icon { color: #4285F4; }
+.google-app-item[data-app="maps"] .google-app-icon { color: #34A853; }
+.google-app-item[data-app="youtube"] .google-app-icon { color: #EA4335; }
+.google-app-item[data-app="play"] .google-app-icon { color: #FBBC05; }
+.google-app-item[data-app="news"] .google-app-icon { color: #4285F4; }
+.google-app-item[data-app="gmail"] .google-app-icon { color: #EA4335; }
+.google-app-item[data-app="meet"] .google-app-icon { color: #00897B; }
+.google-app-item[data-app="drive"] .google-app-icon { color: #34A853; }
+.google-app-item[data-app="calendar"] .google-app-icon { color: #4285F4; }
+.google-app-item[data-app="photos"] .google-app-icon { color: #FBBC05; }
+.google-app-item[data-app="translate"] .google-app-icon { color: #4285F4; }
 
 .toolbar-btn {
     width: 36px;
@@ -1664,14 +1747,42 @@ body {
 }
 
 .link-item .icon-input {
-    width: 140px;
+    width: 120px;
     text-align: left;
     font-family: 'Courier New', monospace;
     font-size: 0.75rem;
 }
 
+.visibility-toggle {
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.visibility-toggle:hover {
+    background: var(--surface1);
+}
+
+.visibility-toggle.hidden {
+    color: var(--overlay0);
+    opacity: 0.6;
+}
+
 .link-item .url-input {
-    flex: 2;
+    flex: 1.5;
+    min-width: 150px;
+}
+
+.link-item input {
+    min-width: 80px;
 }
 
 .delete-btn {
@@ -2450,13 +2561,76 @@ kbd {
     background: var(--surface2);
 }
 
-/* Selection */
-::selection {
-    background: var(--primary);
-    color: var(--crust);
+/* Skeleton Loading Animation */
+.skeleton {
+    background: linear-gradient(90deg, var(--surface0) 25%, var(--surface1) 50%, var(--surface0) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite linear;
+    border-radius: var(--radius-sm);
+    display: inline-block;
+    vertical-align: middle;
 }
 
-/* Responsive Design */
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-text {
+    height: 1em;
+    width: 100px;
+    margin: 0 5px;
+}
+
+.skeleton-icon {
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+}
+
+/* Enhanced Animations */
+.link-card {
+    transition: all var(--transition-normal);
+}
+
+.link-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.link-card:active {
+    transform: translateY(-2px) scale(0.98);
+}
+
+.settings-tab {
+    position: relative;
+    overflow: hidden;
+}
+
+.settings-tab::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: all var(--transition-normal);
+    transform: translateX(-50%);
+}
+
+.settings-tab.active::after {
+    width: 80%;
+}
+
+/* Reduced Motion refinements already present, but ensured here */
+@media (prefers-reduced-motion: reduce) {
+    .skeleton {
+        animation: none;
+        background: var(--surface0);
+    }
+}
+
 @media (max-width: 768px) {
     .container {
         padding: var(--spacing-lg);
@@ -2740,9 +2914,403 @@ kbd {
     transition: opacity var(--transition-fast);
 }
 
-.credits-link:hover {
-    opacity: 0.8;
-    text-decoration: underline;
+.drag-handle {
+    cursor: grab;
+    color: var(--overlay0);
+    padding: 0 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--transition-fast);
+}
+
+.drag-handle:hover {
+    color: var(--primary);
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+/* Quick Add Buttons */
+.category-quick-add {
+    background: transparent;
+    border: none;
+    color: var(--overlay0);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.category-quick-add:hover {
+    color: var(--primary);
+    background: var(--surface0);
+}
+
+.sidebar-quick-add {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.sidebar-quick-add input {
+    flex: 1;
+    background: var(--mantle);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+    outline: none;
+}
+
+.sidebar-quick-add input:focus {
+    border-color: var(--primary);
+}
+
+.sidebar-quick-add button {
+    background: var(--surface0);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 0 0.6rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.sidebar-quick-add button:hover {
+    background: var(--primary);
+    color: var(--crust);
+}
+
+/* Todo Sidebar - Floating Window */
+.todo-sidebar {
+    position: fixed;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    width: 280px;
+    max-height: 80vh;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(20px);
+    box-shadow: var(--glass-shadow);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.todo-sidebar.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.sidebar-header {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
+}
+
+.header-drag-handle {
+    cursor: move;
+    cursor: grab;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.header-drag-handle:hover {
+    opacity: 1;
+}
+
+.header-drag-handle:active {
+    cursor: grabbing;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.header-add-list-btn,
+.header-delete-list-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0.3rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    opacity: 0.6;
+}
+
+.header-add-list-btn:hover,
+.header-delete-list-btn:hover {
+    opacity: 1;
+    background: var(--surface1);
+}
+
+.header-add-list-btn:hover {
+    color: var(--primary);
+}
+
+.header-delete-list-btn:hover {
+    color: var(--danger, #ff4d4d);
+}
+
+.sidebar-header h3.list-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    flex: 1;
+    padding: 0.2rem 0.4rem;
+    border-radius: var(--radius-sm);
+    transition: background 0.2s;
+    outline: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-header h3.list-title:hover,
+.sidebar-header h3.list-title:focus {
+    background: var(--surface1);
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-sm);
+    min-height: 100px;
+}
+
+.sidebar-todo-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: var(--radius-md);
+    transition: background 0.2s;
+    min-height: 36px;
+}
+
+.drag-handle {
+    cursor: grab;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    padding: 0.2rem;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.drag-handle:hover {
+    opacity: 1;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+.sidebar-todo-item .todo-checkbox {
+    flex-shrink: 0;
+}
+
+.sidebar-todo-item:hover {
+    background: var(--surface0);
+}
+
+.sidebar-todo-item.completed .todo-text {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.sidebar-todo-item .todo-text {
+    flex: 1;
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.sidebar-todo-delete {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: var(--radius-sm);
+    opacity: 0;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-todo-item:hover .sidebar-todo-delete {
+    opacity: 0.7;
+}
+
+.sidebar-todo-delete:hover {
+    opacity: 1 !important;
+    color: var(--danger, #ff4d4d);
+    background: var(--surface1);
+}
+
+.sidebar-footer {
+    padding: var(--spacing-sm);
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid var(--glass-border);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2rem 0;
+    font-size: 0.8rem;
+    color: var(--overlay0);
+    font-style: italic;
+}
+
+/* Custom Checkbox for Sidebar */
+.todo-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    width: 16px;
+    height: 16px;
+    position: relative;
+}
+
+.todo-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    width: 16px;
+    height: 16px;
+    background-color: var(--mantle);
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.todo-checkbox:hover input ~ .checkmark {
+    border-color: var(--primary);
+}
+
+.todo-checkbox input:checked ~ .checkmark {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.todo-checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.todo-checkbox .checkmark:after {
+    width: 4px;
+    height: 8px;
+    border: solid var(--crust);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    margin-bottom: 2px;
+}
+
+/* Sidebar Responsive */
+@media (max-width: 1400px) {
+    .todo-sidebar {
+        left: 10px;
+        width: 220px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .todo-sidebar {
+        display: none !important;
+    }
+}
+
+/* Todo Widget */
+.todo-widget {
+    cursor: pointer;
+    transition: transform var(--transition-fast);
+}
+
+.todo-widget:hover {
+    transform: translateY(-2px);
+}
+
+.todo-items-footer {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.todos-list-settings {
+    scrollbar-width: thin;
+}
+
+.todo-complete-check {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.sortable-ghost {
+    opacity: 0.4;
+    background: var(--surface1) !important;
+}
+
+.sortable-chosen {
+    border: 2px solid var(--primary) !important;
+    transform: scale(1.05);
+}
+
+.notification {
+    z-index: 10001;
 }
 
 .credits-avatars {

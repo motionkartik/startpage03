@@ -157,6 +157,7 @@ function loadSettings() {
         footerLeft: localStorage.getItem('footerLeft') ?? defaults.footerLeft,
         footerCenter: localStorage.getItem('footerCenter') ?? defaults.footerCenter,
         footerRight: localStorage.getItem('footerRight') ?? defaults.footerRight,
+        showTodoSidebar: localStorage.getItem('showTodoSidebar') ?? 'true',
         socialLinks: JSON.parse(localStorage.getItem('socialLinks')) ?? defaults.socialLinks
     };
 }
@@ -225,11 +226,100 @@ function saveLinks(lnks) {
     localStorage.setItem('links', JSON.stringify(lnks));
 }
 
+function loadTodoLists() {
+    const saved = localStorage.getItem('todoLists');
+    if (saved) {
+        return JSON.parse(saved);
+    }
+    // Migrate old single list if exists
+    const oldTodos = localStorage.getItem('todos');
+    const oldPos = localStorage.getItem('todo-sidebar-pos');
+    const items = oldTodos ? JSON.parse(oldTodos) : [];
+    let pos = { left: '20px', top: '50%' };
+    if (oldPos) {
+        try { pos = JSON.parse(oldPos); } catch (e) {}
+    }
+
+    return [{
+        id: 'list_' + Date.now(),
+        title: 'Tasks',
+        items: items,
+        pos: pos,
+        active: true
+    }];
+}
+
+function saveTodoLists(lists) {
+    localStorage.setItem('todoLists', JSON.stringify(lists));
+}
+
 // Initialize settings
 let settings = loadSettings();
 let categories = loadCategories();
 let links = loadLinks();
+let todoLists = loadTodoLists();
 let currentEngine = settings.preferredEngine;
+
+// ========================================
+// Google Apps Functions
+// ========================================
+
+const googleApps = [
+    { name: 'Search', id: 'search', url: 'https://www.google.com', icon: 'fa-solid fa-magnifying-glass' },
+    { name: 'Maps', id: 'maps', url: 'https://maps.google.com', icon: 'fa-solid fa-location-dot' },
+    { name: 'YouTube', id: 'youtube', url: 'https://www.youtube.com', icon: 'fa-brands fa-youtube' },
+    { name: 'Play', id: 'play', url: 'https://play.google.com', icon: 'fa-solid fa-play' },
+    { name: 'News', id: 'news', url: 'https://news.google.com', icon: 'fa-solid fa-newspaper' },
+    { name: 'Gmail', id: 'gmail', url: 'https://mail.google.com', icon: 'fa-solid fa-envelope' },
+    { name: 'Meet', id: 'meet', url: 'https://meet.google.com', icon: 'fa-solid fa-video' },
+    { name: 'Drive', id: 'drive', url: 'https://drive.google.com', icon: 'fa-brands fa-google-drive' },
+    { name: 'Calendar', id: 'calendar', url: 'https://calendar.google.com', icon: 'fa-solid fa-calendar-days' },
+    { name: 'Photos', id: 'photos', url: 'https://photos.google.com', icon: 'fa-solid fa-images' },
+    { name: 'Translate', id: 'translate', url: 'https://translate.google.com', icon: 'fa-solid fa-language' }
+];
+
+function renderGoogleApps() {
+    const dropdown = document.getElementById('google-apps-dropdown');
+    if (!dropdown) return;
+
+    dropdown.innerHTML = googleApps.map(app => `
+        <a href="${app.url}" class="google-app-item" data-app="${app.id}" target="_blank">
+            <div class="google-app-icon"><i class="${app.icon}"></i></div>
+            <div class="google-app-name">${app.name}</div>
+        </a>
+    `).join('');
+}
+
+function initGoogleApps() {
+    const btn = document.getElementById('google-apps-btn');
+    const dropdown = document.getElementById('google-apps-dropdown');
+    
+    if (!btn || !dropdown) return;
+
+    btn.onclick = (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('active');
+        btn.classList.toggle('active');
+    };
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target) && e.target !== btn) {
+            dropdown.classList.remove('active');
+            btn.classList.remove('active');
+        }
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            dropdown.classList.remove('active');
+            btn.classList.remove('active');
+        }
+    });
+
+    renderGoogleApps();
+}
 
 // ========================================
 // Theme Management
@@ -631,30 +721,37 @@ function updateKeyboardHints() {
 // Weather Function (OpenWeather API Integration)
 // ========================================
 
+let weatherThrottleTimeout;
+
 async function updateWeather() {
     if (!weatherElement) return;
+    
+    // Throttle: don't update more than once every 30 seconds manually
+    if (weatherThrottleTimeout) return;
+
+    // Show skeletons
+    const widgetElement = weatherElement.parentElement;
+    if (widgetElement) {
+        const iconElement = widgetElement.querySelector('.widget-icon');
+        if (iconElement) {
+            iconElement.innerHTML = '<div class="skeleton skeleton-icon"></div>';
+        }
+    }
+    weatherElement.innerHTML = '<div class="skeleton skeleton-text" style="width: 150px;"></div>';
 
     // Check if API key is configured
     if (!settings.openWeatherApiKey || !settings.weatherLocation) {
         // Fall back to mock weather data if no API key or location
-        showMockWeather();
+        setTimeout(showMockWeather, 500); // Slight delay to show skeleton
         return;
     }
 
-    let query = `q=${encodeURIComponent(settings.weatherLocation)}`;
-    // Optionally, use geolocation:
-    // if ('geolocation' in navigator) {
-    //     navigator.geolocation. getCurrentPosition(pos => {
-    //         query = `lat=${pos.coords. latitude}&lon=${pos.coords.longitude}`;
-    //         fetchWeather(query);
-    //     }, () => {
-    //         fetchWeather(query);
-    //     });
-    // } else {
-    //     fetchWeather(query);
-    // }
-    // For now, just use city name:
+    const query = `q=${encodeURIComponent(settings.weatherLocation)}`;
     fetchWeather(query);
+    
+    weatherThrottleTimeout = setTimeout(() => {
+        weatherThrottleTimeout = null;
+    }, 30000); 
 }
 
 async function fetchWeather(query) {
@@ -673,43 +770,40 @@ async function fetchWeather(query) {
 
         // Get temperature, condition, and icon info
         const temp = Math.round(data.main.temp);
-        const condition = data.weather[0].main; // e.g., "Clouds"
+        const condition = data.weather[0].main; 
         const cityName = data.name || settings.weatherLocation;
         const iconCode = data.weather[0].icon;
         const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
         const tempUnit = unit === 'metric' ? '°C' : '°F';
 
-        // Get the parent widget and find the icon element
+        // Update UI
         const widgetElement = weatherElement.parentElement;
         if (widgetElement) {
             const iconElement = widgetElement.querySelector('.widget-icon');
             if (iconElement) {
-                // Show OpenWeather icon
                 iconElement.innerHTML = `<img src="${iconUrl}" alt="" style="width:2em;height:2em;margin:-0.25em 0;vertical-align:middle;">`;
             }
         }
 
         weatherElement.textContent = `${cityName}, ${temp}${tempUnit} ${condition}`;
-        // Also update greeting icon to use the weather icon
+        
+        // Mirror into greeting
         const greetingIcon = document.getElementById('greeting-icon');
         if (greetingIcon && widgetElement) {
             const iconElement = widgetElement.querySelector('.widget-icon');
             if (iconElement) greetingIcon.innerHTML = iconElement.innerHTML;
         }
 
-        // Try to fetch AQI and append if available (use geo coords if possible)
+        // AQI
         try {
             const aqiData = await fetchAQI({ lat: data.coord?.lat, lon: data.coord?.lon, city: cityName });
             if (aqiData && typeof aqiData.aqi === 'number') {
                 weatherElement.textContent = `${weatherElement.textContent} | ${aqiData.aqi} AQI`;
             }
-        } catch (err) {
-            // ignore AQI errors
-        }
+        } catch (err) {}
     } catch (err) {
         console.error('Weather fetch error:', err);
-        // Fall back to mock weather on error
         showMockWeather();
     }
 }
@@ -813,17 +907,294 @@ function updateQuote() {
 
     if (settings.showQuotes === 'true') {
         quoteWidget.style.display = 'flex';
-        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-        quoteElement.textContent = randomQuote;
+        
+        // Show skeleton briefly
+        quoteElement.innerHTML = '<div class="skeleton skeleton-text" style="width: 250px;"></div>';
+        
+        setTimeout(() => {
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            quoteElement.textContent = randomQuote;
+        }, 300);
     } else {
         quoteWidget.style.display = 'none';
     }
 }
 
 // ========================================
-// Social Links Functions
+// Todo List Functions
 // ========================================
 
+function renderTodosWidget() {
+    let todoWidget = document.querySelector('.todo-widget');
+    if (!todoWidget) {
+        todoWidget = document.createElement('div');
+        todoWidget.className = 'widget todo-widget';
+        todoWidget.innerHTML = '<div class="todo-items-footer"></div>';
+    }
+
+    const itemsContainer = todoWidget.querySelector('.todo-items-footer');
+    if (!itemsContainer) return;
+
+    // Filter incomplete todos across all active lists
+    const activeTodosCount = todoLists.reduce((acc, list) => {
+        return acc + list.items.filter(t => !t.completed).length;
+    }, 0);
+
+    if (activeTodosCount > 0) {
+        itemsContainer.innerHTML = `
+            <span class="widget-icon"><i class="fa-solid fa-check-double"></i></span>
+            <span class="widget-text">${activeTodosCount} task${activeTodosCount > 1 ? 's' : ''} remaining</span>
+        `;
+    } else {
+        itemsContainer.innerHTML = `
+            <span class="widget-icon"><i class="fa-solid fa-circle-check"></i></span>
+            <span class="widget-text">All done!</span>
+        `;
+    }
+
+    todoWidget.onclick = () => {
+        // Toggle the first sidebar as a default behavior
+        const sidebars = document.querySelectorAll('.todo-sidebar');
+        if (sidebars.length > 0) {
+            sidebars.forEach(sb => sb.classList.toggle('active'));
+        }
+    };
+
+    return todoWidget;
+}
+
+function renderTodoSidebar() {
+    // Remove existing sidebars
+    document.querySelectorAll('.todo-sidebar').forEach(el => el.remove());
+
+    if (settings.showTodoSidebar === 'false') return;
+
+    todoLists.forEach(list => {
+        createSidebarInstance(list);
+    });
+}
+
+function createSidebarInstance(list) {
+    const sidebar = document.createElement('div');
+    sidebar.className = 'todo-sidebar active';
+    sidebar.id = `sidebar-${list.id}`;
+    sidebar.setAttribute('data-list-id', list.id);
+
+    // Apply position
+    if (list.pos) {
+        sidebar.style.left = list.pos.left;
+        sidebar.style.top = list.pos.top;
+        sidebar.style.transform = 'none';
+    }
+
+    sidebar.innerHTML = `
+        <div class="sidebar-header" id="header-${list.id}">
+            <div class="header-drag-handle" title="Drag to move">
+                <i class="fa-solid fa-grip-lines"></i>
+            </div>
+            <h3 contenteditable="true" class="list-title">${escapeHtml(list.title)}</h3>
+            <div class="header-actions">
+                <button class="header-add-list-btn" onclick="addNewTaskList()" title="New Task List">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+                <button class="header-delete-list-btn" onclick="deleteTaskList('${list.id}')" title="Delete This List">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+        <div class="sidebar-content" id="list-content-${list.id}">
+            <div class="sidebar-quick-add">
+                <input type="text" class="sidebar-todo-input" placeholder="Quick add task..." aria-label="Quick add task">
+                <button class="sidebar-quick-add-btn"><i class="fa-solid fa-plus"></i></button>
+            </div>
+            <div class="sidebar-todo-list">
+                ${list.items.length === 0 ? '<div class="empty-state">No tasks yet</div>' : list.items.map(todo => `
+                    <div class="sidebar-todo-item ${todo.completed ? 'completed' : ''}" data-id="${todo.id}">
+                        <i class="fa-solid fa-grip-vertical drag-handle"></i>
+                        <label class="todo-checkbox">
+                            <input type="checkbox" ${todo.completed ? 'checked' : ''} data-id="${todo.id}">
+                            <span class="checkmark"></span>
+                        </label>
+                        <span class="todo-text">${escapeHtml(todo.text)}</span>
+                        <button class="sidebar-todo-delete" data-id="${todo.id}" title="Delete Task">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <button class="toolbar-btn sidebar-delete-all-btn" title="Delete All Tasks">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        </div>
+    `;
+
+    document.body.appendChild(sidebar);
+
+    // Bind Header Events
+    const titleEl = sidebar.querySelector('.list-title');
+    titleEl.onblur = () => {
+        list.title = titleEl.innerText.trim() || 'Tasks';
+        saveTodoLists(todoLists);
+    };
+    titleEl.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); titleEl.blur(); } };
+
+    // Bind Quick Add
+    const input = sidebar.querySelector('.sidebar-todo-input');
+    const addBtn = sidebar.querySelector('.sidebar-quick-add-btn');
+    const handleAdd = () => {
+        const val = input.value.trim();
+        if (val) {
+            list.items.push({ text: val, completed: false, id: Date.now() });
+            saveTodoLists(todoLists);
+            renderTodoSidebar();
+            updateFooter();
+        }
+    };
+    addBtn.onclick = handleAdd;
+    input.onkeydown = (e) => { if (e.key === 'Enter') handleAdd(); };
+
+    // Bind Item Events
+    const listContainer = sidebar.querySelector('.sidebar-todo-list');
+    listContainer.querySelectorAll('.todo-checkbox input').forEach(check => {
+        check.onchange = (e) => {
+            const id = parseInt(e.target.dataset.id);
+            const item = list.items.find(t => t.id === id);
+            if (item) {
+                item.completed = e.target.checked;
+                saveTodoLists(todoLists);
+                renderTodoSidebar();
+                updateFooter();
+            }
+        };
+    });
+
+    listContainer.querySelectorAll('.sidebar-todo-delete').forEach(btn => {
+        btn.onclick = () => {
+            const id = parseInt(btn.dataset.id);
+            list.items = list.items.filter(t => t.id !== id);
+            saveTodoLists(todoLists);
+            renderTodoSidebar();
+            updateFooter();
+        };
+    });
+
+    // Bind Delete All
+    sidebar.querySelector('.sidebar-delete-all-btn').onclick = () => {
+        if (list.items.length === 0) return;
+        if (confirm(`Delete all tasks in "${list.title}"?`)) {
+            list.items = [];
+            saveTodoLists(todoLists);
+            renderTodoSidebar();
+            updateFooter();
+        }
+    };
+
+    // Init Dragging (Window)
+    initDraggableSidebarInstance(sidebar, sidebar.querySelector('.sidebar-header'), list);
+
+    // Init Sortable (Items)
+    if (typeof Sortable !== 'undefined' && list.items.length > 0) {
+        Sortable.create(listContainer, {
+            animation: 150,
+            handle: '.drag-handle',
+            draggable: '.sidebar-todo-item',
+            onEnd: () => {
+                const newOrder = Array.from(listContainer.querySelectorAll('.sidebar-todo-item'))
+                    .map(item => parseInt(item.dataset.id));
+                list.items = newOrder.map(id => list.items.find(t => t.id === id)).filter(Boolean);
+                saveTodoLists(todoLists);
+                updateFooter();
+            }
+        });
+    }
+}
+
+function addNewTaskList() {
+    const newList = {
+        id: 'list_' + Date.now(),
+        title: 'New List',
+        items: [],
+        pos: { left: '50%', top: '50%' },
+        active: true
+    };
+    todoLists.push(newList);
+    saveTodoLists(todoLists);
+    renderTodoSidebar();
+}
+
+function deleteTaskList(id) {
+    if (todoLists.length <= 1) {
+        alert("You must have at least one task list.");
+        return;
+    }
+    const list = todoLists.find(l => l.id === id);
+    if (confirm(`Delete the entire task list "${list.title}"?`)) {
+        todoLists = todoLists.filter(l => l.id !== id);
+        saveTodoLists(todoLists);
+        renderTodoSidebar();
+        updateFooter();
+    }
+}
+
+function initDraggableSidebarInstance(sidebar, header, list) {
+    let isDragging = false;
+    let initialX;
+    let initialY;
+
+    header.addEventListener('mousedown', dragStart);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', dragEnd);
+
+    function dragStart(e) {
+        if (e.target.closest('.header-drag-handle')) {
+            const rect = sidebar.getBoundingClientRect();
+            initialX = e.clientX - rect.left;
+            initialY = e.clientY - rect.top;
+            isDragging = true;
+            sidebar.style.transition = 'none';
+            sidebar.style.zIndex = 1001; // Bring to front
+            // Reset other sidebars z-index
+            document.querySelectorAll('.todo-sidebar').forEach(sb => {
+                if (sb !== sidebar) sb.style.zIndex = 1000;
+            });
+        }
+    }
+
+    function drag(e) {
+        if (isDragging) {
+            e.preventDefault();
+            let newX = e.clientX - initialX;
+            let newY = e.clientY - initialY;
+
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const rect = sidebar.getBoundingClientRect();
+
+            if (newX < 0) newX = 0;
+            if (newX + rect.width > viewportWidth) newX = viewportWidth - rect.width;
+            if (newY < 0) newY = 0;
+            if (newY + rect.height > viewportHeight) newY = viewportHeight - rect.height;
+
+            sidebar.style.left = `${newX}px`;
+            sidebar.style.top = `${newY}px`;
+            sidebar.style.transform = 'none';
+        }
+    }
+
+    function dragEnd() {
+        if (isDragging) {
+            isDragging = false;
+            sidebar.style.transition = 'opacity 0.3s ease';
+            list.pos = {
+                left: sidebar.style.left,
+                top: sidebar.style.top
+            };
+            saveTodoLists(todoLists);
+        }
+    }
+}
 function renderSocialLinks() {
     // Get or create social links container
     let socialWidget = document.querySelector('.social-widget');
@@ -937,6 +1308,10 @@ function createFooterWidget(type) {
         return renderSocialLinks();
     }
 
+    if (type === 'todos') {
+        return renderTodosWidget();
+    }
+
     return null;
 }
 
@@ -947,45 +1322,110 @@ function renderLinksGrid() {
 
     const colorMode = settings.colorMode;
     const linkTarget = settings.linkBehavior === 'new-tab' ? '_blank' : (settings.linkBehavior === 'new-window' ? '_blank' : '_self');
-
     const visibleCategories = categories.filter(c => c.visible !== false);
-    linksGrid.innerHTML = visibleCategories.map((category, index) => {
+    
+    const fragment = document.createDocumentFragment();
+
+    visibleCategories.forEach((category, index) => {
         const categoryLinks = (links[category.id] || []).filter(l => l.visible !== false);
         const colorClass = colorMode === 'multi' ? categoryColors[index % categoryColors.length] : 'mauve';
 
-        return `
-            <section class="link-group" data-category="${category.id}" data-color="${colorClass}">
-                <h2 class="group-title">
-                    <span class="title-icon"><i class="${category.icon}"></i></span>
-                    ${category.name}
-                </h2>
-                <div class="links ${categoryLinks.length === 1 ? 'single-link' : ''}">
-                    ${categoryLinks.map(link => `
-                                    <a href="${link.url}" class="link-card" target="${linkTarget}" data-link-behavior="${settings.linkBehavior}" data-link-id="${link.id}">
-                            <span class="link-icon"><i class="${link.icon || 'fa-solid fa-link'}"></i></span>
-                            <span class="link-text">${link.name}</span>
-                        </a>
-                    `).join('')}
-                </div>
-            </section>
-        `;
-    }).join('');
+        const section = document.createElement('section');
+        section.className = 'link-group';
+        section.dataset.category = category.id;
+        section.dataset.color = colorClass;
 
-    // Add click handlers for link behavior
-    document.querySelectorAll('.link-card').forEach(link => {
-        link.addEventListener('click', function (e) {
-            const behavior = this.getAttribute('data-link-behavior');
-            if (behavior === 'new-tab' || behavior === 'new-window') {
-                e.preventDefault();
-                window.open(this.href, '_blank', 'noopener,noreferrer');
-            }
-            // 'same' uses target="_self" (default browser behavior)
+        const h2 = document.createElement('h2');
+        h2.className = 'group-title';
+        
+        let quickAddHtml = '';
+        if (settings.showQuickAddButtons === 'true') {
+            quickAddHtml = `<button class="category-quick-add" title="Add Link to ${category.name}" data-category="${category.id}"><i class="fa-solid fa-plus"></i></button>`;
+        }
+
+        h2.innerHTML = `
+            <div style="display: flex; align-items: center; gap: var(--spacing-sm); flex: 1;">
+                <span class="title-icon"><i class="${category.icon}"></i></span>
+                ${category.name}
+            </div>
+            ${quickAddHtml}
+        `;
+        section.appendChild(h2);
+
+        // Add listener for category quick add
+        const quickAddBtn = h2.querySelector('.category-quick-add');
+        if (quickAddBtn) {
+            quickAddBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const catId = quickAddBtn.dataset.category;
+                openLinkSettingsForCategory(catId);
+            });
+        }
+
+        const linksDiv = document.createElement('div');
+        linksDiv.className = `links ${categoryLinks.length === 1 ? 'single-link' : ''}`;
+
+        categoryLinks.forEach(link => {
+            const a = document.createElement('a');
+            a.href = link.url;
+            a.className = 'link-card';
+            a.target = linkTarget;
+            a.dataset.linkBehavior = settings.linkBehavior;
+            a.dataset.linkId = link.id;
+            a.innerHTML = `
+                <span class="link-icon"><i class="${link.icon || 'fa-solid fa-link'}"></i></span>
+                <span class="link-text">${link.name}</span>
+            `;
+            
+            a.addEventListener('click', function (e) {
+                const behavior = this.getAttribute('data-link-behavior');
+                if (behavior === 'new-tab' || behavior === 'new-window') {
+                    e.preventDefault();
+                    window.open(this.href, '_blank', 'noopener,noreferrer');
+                }
+            });
+            
+            linksDiv.appendChild(a);
         });
+
+        section.appendChild(linksDiv);
+        fragment.appendChild(section);
     });
 
+    linksGrid.innerHTML = '';
+    linksGrid.appendChild(fragment);
+
     updateGridLayout();
-    // Initialize drag-and-drop on the main grid and per-category link lists
     initDragAndDropMain();
+}
+
+function openLinkSettingsForCategory(catId) {
+    const overlay = document.getElementById('settings-overlay');
+    if (!overlay) return;
+    
+    overlay.classList.add('active');
+    
+    // Switch to links tab
+    const linksTab = document.querySelector('[data-tab="links"]');
+    if (linksTab) linksTab.click();
+    
+    // Select the category
+    const select = document.getElementById('link-category-select');
+    if (select) {
+        select.value = catId;
+        renderLinksForCategory(catId);
+        
+        // Trigger add link
+        addLink();
+        
+        // Focus the name input of the newly added link
+        setTimeout(() => {
+            const container = document.getElementById('links-list');
+            const lastItem = container?.lastElementChild;
+            const nameInput = lastItem?.querySelector('input[data-field="name"]');
+            if (nameInput) nameInput.focus();
+        }, 100);
+    }
 }
 
 function updateGridLayout() {
@@ -1013,9 +1453,24 @@ function initSettings() {
 
     if (!settingsBtn || !settingsOverlay || !settingsClose) return;
 
+    // Focus trap variables
+    const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    let firstFocusableElement;
+    let lastFocusableElement;
+
+    function updateFocusableElements() {
+        const elements = settingsOverlay.querySelectorAll(focusableElements);
+        firstFocusableElement = elements[0];
+        lastFocusableElement = elements[elements.length - 1];
+    }
+
     // Open settings
     settingsBtn.addEventListener('click', () => {
         settingsOverlay.classList.add('active');
+        updateFocusableElements();
+        // Focus first element or a specific tab
+        if (firstFocusableElement) firstFocusableElement.focus();
+        
         // Ensure search engines settings are rendered before populating values
         renderSearchEngineSettings();
         populateSettingsUI();
@@ -1024,20 +1479,38 @@ function initSettings() {
     // Close settings
     settingsClose.addEventListener('click', () => {
         settingsOverlay.classList.remove('active');
+        settingsBtn.focus(); // Return focus to trigger button
     });
 
     // Close on overlay click
     settingsOverlay.addEventListener('click', (e) => {
         if (e.target === settingsOverlay) {
             settingsOverlay.classList.remove('active');
+            settingsBtn.focus();
         }
     });
 
-    // Close on Escape key
+    // Close on Escape key and Focus Trap
     document.addEventListener('keydown', (e) => {
+        if (!settingsOverlay.classList.contains('active')) return;
+
         if (e.key === 'Escape') {
-            if (settingsOverlay.classList.contains('active')) {
-                settingsOverlay.classList.remove('active');
+            settingsOverlay.classList.remove('active');
+            settingsBtn.focus();
+        }
+
+        if (e.key === 'Tab') {
+            updateFocusableElements(); // Elements might have changed (e.g. new todo)
+            if (e.shiftKey) { // Shift + Tab
+                if (document.activeElement === firstFocusableElement) {
+                    lastFocusableElement.focus();
+                    e.preventDefault();
+                }
+            } else { // Tab
+                if (document.activeElement === lastFocusableElement) {
+                    firstFocusableElement.focus();
+                    e.preventDefault();
+                }
             }
         }
     });
@@ -1059,6 +1532,8 @@ function initSettings() {
                 renderLinksSettings();
             } else if (tabId === 'social') {
                 renderSocialLinksSettings();
+            } else if (tabId === 'todos') {
+                renderTodosSettings();
             } else if (tabId === 'footer') {
                 renderFooterSettings();
             } else if (tabId === 'search-engines') {
@@ -1096,6 +1571,8 @@ function initSettings() {
                 renderLinksGrid();
             } else if (setting === 'showKeyboardHints') {
                 updateKeyboardHints();
+            } else if (setting === 'showTodoSidebar') {
+                renderTodoSidebar();
             } else if (setting === 'footerLeft' || setting === 'footerCenter' || setting === 'footerRight') {
                 updateFooter();
             }
@@ -1154,6 +1631,19 @@ function initSettings() {
 
         waqiKeyInput.addEventListener('blur', () => {
             updateWeather();
+        });
+    }
+
+    // Todo add handler
+    const addTodoBtn = document.getElementById('add-todo-btn');
+    const newTodoInput = document.getElementById('new-todo-input');
+    if (addTodoBtn && newTodoInput) {
+        addTodoBtn.addEventListener('click', addTodo);
+        newTodoInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addTodo();
+            }
         });
     }
 
@@ -1242,6 +1732,7 @@ function renderCategoriesSettings() {
 
     container.innerHTML = categories.map((category, index) => `
         <div class="category-item" data-id="${category.id}">
+            <div class="drag-handle" title="Drag to reorder"><i class="fa-solid fa-grip-vertical"></i></div>
             <label class="category-checkbox">
                 <input type="checkbox" data-id="${category.id}" ${category.visible ? 'checked' : ''}>
             </label>
@@ -1405,13 +1896,14 @@ function renderLinksForCategory(categoryId) {
 
     container.innerHTML = categoryLinks.map((link, index) => `
         <div class="link-item" data-index="${index}" data-link-id="${link.id}">
-            <label class="link-checkbox">
-                <input type="checkbox" data-index="${index}" ${link.visible ? 'checked' : ''}>
-            </label>
+            <div class="drag-handle" title="Drag to reorder"><i class="fa-solid fa-grip-vertical"></i></div>
+            <button class="visibility-toggle ${link.visible === false ? 'hidden' : ''}" title="${link.visible === false ? 'Show link' : 'Hide link'}" data-index="${index}">
+                <i class="fa-solid ${link.visible === false ? 'fa-eye-slash' : 'fa-eye'}"></i>
+            </button>
             <span class="icon-preview"><i class="${link.icon || 'fa-solid fa-link'}"></i></span>
-            <input type="text" class="icon-input" value="${link.icon || 'fa-solid fa-link'}" placeholder="fa-solid fa-link" data-field="icon">
-            <input type="text" value="${link.name}" placeholder="Link Name" maxlength="1001" data-field="name">
-            <input type="url" class="url-input" value="${link.url}" placeholder="https://..." data-field="url">
+            <input type="text" class="icon-input" value="${link.icon || 'fa-solid fa-link'}" placeholder="icon class" data-field="icon" title="Icon Class">
+            <input type="text" value="${link.name}" placeholder="Link Name" maxlength="1001" data-field="name" title="Link Name">
+            <input type="url" class="url-input" value="${link.url}" placeholder="https://..." data-field="url" title="URL">
             <button class="delete-btn" title="Delete Link">
                 <i class="fa-solid fa-trash"></i>
             </button>
@@ -1426,13 +1918,25 @@ function renderLinksForCategory(categoryId) {
     container.querySelectorAll('.link-item').forEach(item => {
         const index = parseInt(item.dataset.index);
         const linkId = item.dataset.linkId;
+        const linkObj = categoryLinks[index];
         const iconPreview = item.querySelector('.icon-preview i');
-        const checkbox = item.querySelector('.link-checkbox input');
+        const visBtn = item.querySelector('.visibility-toggle');
         const nameInput = item.querySelector('input[data-field="name"]');
-        const urlInput = item.querySelector('input[data-field="url"]');
+
+        if (!linkObj) return;
 
         // Track if the user has manually edited the name field
-        let nameEdited = false;
+        let nameEdited = linkObj.name !== '';
+
+        if (visBtn) {
+            visBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                linkObj.visible = linkObj.visible === false ? true : false;
+                saveLinks(links);
+                renderLinksForCategory(categoryId);
+                renderLinksGrid();
+            });
+        }
 
         item.querySelectorAll('input').forEach(input => {
             const field = input.dataset.field;
@@ -1508,10 +2012,13 @@ function addLink() {
 
     if (links[categoryId].length >= 1001) return;
 
+    const newId = 'link_' + Math.random().toString(36).substr(2, 9);
     links[categoryId].push({
+        id: newId,
         name: '', // Start with empty name to allow autofill
         url: 'https://',
-        icon: 'fa-solid fa-link'
+        icon: 'fa-solid fa-link',
+        visible: true
     });
 
     saveLinks(links);
@@ -1776,6 +2283,9 @@ function init() {
     // Update footer layout
     updateFooter();
 
+    // Init Sidebar
+    renderTodoSidebar();
+
     // Restore preferred search engine
     if (settings.enabledEngines.includes(settings.preferredEngine)) {
         setSearchEngine(settings.preferredEngine);
@@ -1788,6 +2298,9 @@ function init() {
 
     // Initialize settings
     initSettings();
+
+    // Initialize Google Apps menu
+    initGoogleApps();
 
     // Focus search input after a brief delay
     setTimeout(() => {
@@ -1812,6 +2325,8 @@ function initDragAndDropMain() {
             animation: 150,
             handle: '.group-title',
             draggable: 'section.link-group',
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
             onEnd: function (evt) {
                 // Rebuild categories order based on DOM
                 const newOrder = Array.from(document.querySelectorAll('#links-grid .link-group')).map(el => el.dataset.category);
@@ -1831,6 +2346,8 @@ function initDragAndDropMain() {
                 group: 'links',
                 animation: 150,
                 draggable: '.link-card',
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
                 onAdd: function (evt) {
                     const fromGroup = evt.from.closest('.link-group').dataset.category;
                     const toGroup = evt.to.closest('.link-group').dataset.category;
@@ -1876,7 +2393,9 @@ function initDragAndDropSettings() {
         try {
             Sortable.create(catsContainer, {
                 animation: 150,
+                handle: '.drag-handle',
                 draggable: '.category-item',
+                ghostClass: 'sortable-ghost',
                 onEnd: function () {
                     const newOrder = Array.from(catsContainer.querySelectorAll('.category-item')).map(el => el.dataset.id);
                     categories = newOrder.map(id => categories.find(c => c.id === id)).filter(Boolean);
@@ -1895,7 +2414,9 @@ function initDragAndDropSettings() {
         try {
             Sortable.create(linksContainer, {
                 animation: 150,
+                handle: '.drag-handle',
                 draggable: '.link-item',
+                ghostClass: 'sortable-ghost',
                 onEnd: function () {
                     const select = document.getElementById('link-category-select');
                     const catId = select ? select.value : null;
@@ -1963,6 +2484,37 @@ function exportSettings() {
     showNotification('Settings exported successfully!', 'success');
 }
 
+function validateImportData(data) {
+    if (!data || typeof data !== 'object') return false;
+    if (!data.version || !data.settings) return false;
+    
+    // Basic settings structure validation
+    const requiredSettings = ['theme', 'colorScheme', 'preferredEngine'];
+    for (const key of requiredSettings) {
+        if (data.settings[key] === undefined && localStorage.getItem(key) === null) {
+            console.warn(`Missing required setting: ${key}`);
+            // We can still proceed if some are missing, but this is a red flag
+        }
+    }
+    
+    // Validate categories and links if present
+    if (data.categories) {
+        try {
+            const cats = JSON.parse(data.categories);
+            if (!Array.isArray(cats)) return false;
+        } catch (e) { return false; }
+    }
+    
+    if (data.links) {
+        try {
+            const lnks = JSON.parse(data.links);
+            if (typeof lnks !== 'object') return false;
+        } catch (e) { return false; }
+    }
+    
+    return true;
+}
+
 function importSettings(file) {
     const reader = new FileReader();
 
@@ -1971,8 +2523,8 @@ function importSettings(file) {
             const importData = JSON.parse(e.target.result);
 
             // Validate data structure
-            if (!importData.version || !importData.settings) {
-                throw new Error('Invalid backup file format');
+            if (!validateImportData(importData)) {
+                throw new Error('Invalid or corrupted backup file format');
             }
 
             // Confirm before overwriting
