@@ -261,67 +261,6 @@ let todoLists = loadTodoLists();
 let currentEngine = settings.preferredEngine;
 
 // ========================================
-// Google Apps Functions
-// ========================================
-
-const googleApps = [
-    { name: 'Search', id: 'search', url: 'https://www.google.com', icon: 'fa-solid fa-magnifying-glass' },
-    { name: 'Maps', id: 'maps', url: 'https://maps.google.com', icon: 'fa-solid fa-location-dot' },
-    { name: 'YouTube', id: 'youtube', url: 'https://www.youtube.com', icon: 'fa-brands fa-youtube' },
-    { name: 'Play', id: 'play', url: 'https://play.google.com', icon: 'fa-solid fa-play' },
-    { name: 'News', id: 'news', url: 'https://news.google.com', icon: 'fa-solid fa-newspaper' },
-    { name: 'Gmail', id: 'gmail', url: 'https://mail.google.com', icon: 'fa-solid fa-envelope' },
-    { name: 'Meet', id: 'meet', url: 'https://meet.google.com', icon: 'fa-solid fa-video' },
-    { name: 'Drive', id: 'drive', url: 'https://drive.google.com', icon: 'fa-brands fa-google-drive' },
-    { name: 'Calendar', id: 'calendar', url: 'https://calendar.google.com', icon: 'fa-solid fa-calendar-days' },
-    { name: 'Photos', id: 'photos', url: 'https://photos.google.com', icon: 'fa-solid fa-images' },
-    { name: 'Translate', id: 'translate', url: 'https://translate.google.com', icon: 'fa-solid fa-language' }
-];
-
-function renderGoogleApps() {
-    const dropdown = document.getElementById('google-apps-dropdown');
-    if (!dropdown) return;
-
-    dropdown.innerHTML = googleApps.map(app => `
-        <a href="${app.url}" class="google-app-item" data-app="${app.id}" target="_blank">
-            <div class="google-app-icon"><i class="${app.icon}"></i></div>
-            <div class="google-app-name">${app.name}</div>
-        </a>
-    `).join('');
-}
-
-function initGoogleApps() {
-    const btn = document.getElementById('google-apps-btn');
-    const dropdown = document.getElementById('google-apps-dropdown');
-    
-    if (!btn || !dropdown) return;
-
-    btn.onclick = (e) => {
-        e.stopPropagation();
-        dropdown.classList.toggle('active');
-        btn.classList.toggle('active');
-    };
-
-    // Close on click outside
-    document.addEventListener('click', (e) => {
-        if (!dropdown.contains(e.target) && e.target !== btn) {
-            dropdown.classList.remove('active');
-            btn.classList.remove('active');
-        }
-    });
-
-    // Close on Escape
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            dropdown.classList.remove('active');
-            btn.classList.remove('active');
-        }
-    });
-
-    renderGoogleApps();
-}
-
-// ========================================
 // Theme Management
 // ========================================
 
@@ -1982,16 +1921,6 @@ function renderLinksForCategory(categoryId) {
                 });
             }
         });
-        if (checkbox) {
-            checkbox.addEventListener('change', (e) => {
-                if (links[categoryId] && links[categoryId][index]) {
-                    links[categoryId][index].visible = e.target.checked;
-                    saveLinks(links);
-                    renderLinksGrid();
-                }
-            });
-        }
-
         item.querySelector('.delete-btn').addEventListener('click', () => {
             deleteLink(categoryId, index);
         });
@@ -2299,9 +2228,6 @@ function init() {
     // Initialize settings
     initSettings();
 
-    // Initialize Google Apps menu
-    initGoogleApps();
-
     // Focus search input after a brief delay
     setTimeout(() => {
         if (searchInput) searchInput.focus();
@@ -2426,6 +2352,7 @@ function initDragAndDropSettings() {
                     links[catId] = newOrder.map(id => arr.find(l => l.id === id)).filter(Boolean);
                     saveLinks(links);
                     renderLinksGrid();
+                    renderLinksForCategory(catId);
                 }
             });
         } catch (e) {
