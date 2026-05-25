@@ -137,6 +137,7 @@ function loadSettings() {
         colorScheme: 'catppuccin',
         theme: 'dark',
         colorMode: 'multi',
+        masonryLayout: 'false',
         timeFormat: '12',
         showSeconds: 'false',
         tempUnit: 'F',
@@ -159,6 +160,7 @@ function loadSettings() {
         colorScheme: localStorage.getItem('colorScheme') ?? defaults.colorScheme,
         theme: localStorage.getItem('theme') ?? defaults.theme,
         colorMode: localStorage.getItem('colorMode') ?? defaults.colorMode,
+        masonryLayout: localStorage.getItem('masonryLayout') ?? defaults.masonryLayout,
         timeFormat: localStorage.getItem('timeFormat') ?? defaults.timeFormat,
         showSeconds: localStorage.getItem('showSeconds') ?? defaults.showSeconds,
         tempUnit: localStorage.getItem('tempUnit') ?? defaults.tempUnit,
@@ -1409,7 +1411,7 @@ function updateGridLayout() {
 
     const categoryCount = categories.filter(c => c.visible !== false).length;
 
-    linksGrid.classList.remove('grid-single', 'grid-even', 'grid-odd');
+    linksGrid.classList.remove('grid-single', 'grid-even', 'grid-odd', 'masonry-grid');
 
     if (categoryCount === 1) {
         linksGrid.classList.add('grid-single');
@@ -1417,6 +1419,10 @@ function updateGridLayout() {
         linksGrid.classList.add('grid-even');
     } else {
         linksGrid.classList.add('grid-odd');
+    }
+
+    if (settings.masonryLayout === 'true' && categoryCount > 1) {
+        linksGrid.classList.add('masonry-grid');
     }
 }
 
@@ -1541,6 +1547,8 @@ function initSettings() {
                 updateDateTime();
             } else if (setting === 'tempUnit') {
                 updateWeather();
+            } else if (setting === 'masonryLayout') {
+                updateGridLayout();
             } else if (setting === 'showQuotes') {
                 updateQuote();
             } else if (setting === 'linkBehavior') {
@@ -2412,6 +2420,7 @@ function exportSettings() {
             colorScheme: localStorage.getItem('colorScheme'),
             theme: localStorage.getItem('theme'),
             colorMode: localStorage.getItem('colorMode'),
+            masonryLayout: localStorage.getItem('masonryLayout'),
             timeFormat: localStorage.getItem('timeFormat'),
             showSeconds: localStorage.getItem('showSeconds'),
             tempUnit: localStorage.getItem('tempUnit'),
