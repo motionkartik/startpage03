@@ -1072,6 +1072,20 @@ body {
     opacity: 0.95;
 }
 
+.humidity-icon {
+    width: 1.1em;
+    height: 1.1em;
+    vertical-align: middle;
+    margin: -2px 3px 0 3px;
+    filter: brightness(0) invert(1);
+    display: inline-block;
+    opacity: 0.5
+}
+
+[data-theme="light"] .humidity-icon {
+    filter: none;
+}
+
 /* Hide the widget icon inside the header-weather (we mirror it into the greeting-icon) */
 .header .header-weather .widget-icon {
     display: none;
@@ -2665,31 +2679,35 @@ kbd {
 }
 
 .header {
-    animation: fadeInUp 0.6s ease backwards;
+    animation: fadeInUp 0.5s ease backwards;
 }
 
 .search-container {
-    animation: fadeInUp 0.6s ease 0.1s backwards;
+    animation: fadeInUp 0.5s ease 0.1s backwards;
+}
+
+.toolbar-btns {
+    animation: fadeInUp 0.5s ease 0.1s backwards;
 }
 
 .link-group:nth-child(1) {
-    animation: fadeInUp 0.6s ease 0.2s backwards;
+    animation: fadeInUp 0.5s ease 0.2s backwards;
 }
 
 .link-group:nth-child(2) {
-    animation: fadeInUp 0.6s ease 0.3s backwards;
+    animation: fadeInUp 0.5s ease 0.3s backwards;
 }
 
 .link-group:nth-child(3) {
-    animation: fadeInUp 0.6s ease 0.4s backwards;
+    animation: fadeInUp 0.5s ease 0.4s backwards;
 }
 
 .link-group:nth-child(4) {
-    animation: fadeInUp 0.6s ease 0.5s backwards;
+    animation: fadeInUp 0.5s ease 0.5s backwards;
 }
 
 .footer {
-    animation: fadeInUp 0.6s ease 0.6s backwards;
+    animation: fadeInUp 0.5s ease 0.6s backwards;
 }
 
 /* Focus visible for accessibility */

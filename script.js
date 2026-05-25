@@ -1,4 +1,4 @@
-// Sip — Modern Browser Startpage
+// Modern Browser Startpage
 // Main script: renders UI, manages settings, and persists data to localStorage.
 
 // Browser detection / feature flags
@@ -8,44 +8,60 @@ const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 // Default data: categories, links, and colors used when no user data exists
 
 const defaultCategories = [
-    { id: 'dev', name: 'Development', icon: 'fa-solid fa-code' },
-    { id: 'social', name: 'Social', icon: 'fa-solid fa-users' },
-    { id: 'media', name: 'Media', icon: 'fa-solid fa-play' },
-    { id: 'productivity', name: 'Productivity', icon: 'fa-solid fa-briefcase' }
+    { id: 'Essentials', name: 'Essentials', icon: 'fa-solid fa-star' },
+    { id: 'Online Tools', name: 'Online Tools', icon: 'fa-solid fa-tools' },
+    { id: 'Miscellaneous', name: 'Miscellaneous', icon: 'fa-solid fa-question-circle' },
+    { id: 'AI Tools', name: 'AI Tools', icon: 'fa-solid fa-robot' }
 ];
 
 const defaultLinks = {
-    'dev': [
-        { name: 'GitHub', url: 'https://github.com', icon: 'fa-brands fa-github' },
-        { name: 'GitLab', url: 'https://gitlab.com', icon: 'fa-brands fa-gitlab' },
-        { name: 'Stack Overflow', url: 'https://stackoverflow.com', icon: 'fa-brands fa-stack-overflow' },
-        { name: 'CodePen', url: 'https://codepen.io', icon: 'fa-brands fa-codepen' },
-        { name: 'Vercel', url: 'https://vercel.com', icon: 'fa-solid fa-v' },
-        { name: 'Docker', url: 'https://docker.com', icon: 'fa-brands fa-docker' }
+    'Essentials': [
+        { name: 'Whatsapp', url: 'https://web.whatsapp.com/', icon: 'fa-brands fa-whatsapp' },
+        { name: 'Youtube', url: 'https://www.youtube.com/', icon: 'fa-brands fa-youtube' },
+        { name: 'Telegram', url: 'https://web.telegram.org/z/', icon: 'fa-brands fa-telegram' },
+        { name: 'Gmail', url: 'https://mail.google.com/mail/u/1/#inbox', icon: 'fa-regular fa-envelope' },
+        { name: 'Google Drive', url: 'https://drive.google.com/drive/u/0/my-drive', icon: 'fa-brands fa-google-drive' },
+        { name: 'Google Sheets', url: 'https://docs.google.com/spreadsheets/u/1/', icon: 'fa-solid fa-table' },
+        { name: 'Appstorrent', url: 'https://appstorrent.ru/', icon: 'fa-brands fa-apple' },
+        { name: 'Google Keep', url: 'https://keep.google.com/u/0/#home', icon: 'fa-regular fa-note-sticky' },
+        { name: 'Monochrome', url: 'https://monochrome.tf/', icon: 'fa-solid fa-link' }
     ],
-    'social': [
-        { name: 'Reddit', url: 'https://reddit.com', icon: 'fa-brands fa-reddit-alien' },
-        { name: 'Twitter', url: 'https://twitter.com', icon: 'fa-brands fa-x-twitter' },
-        { name: 'Discord', url: 'https://discord.com', icon: 'fa-brands fa-discord' },
-        { name: 'LinkedIn', url: 'https://linkedin.com', icon: 'fa-brands fa-linkedin' },
-        { name: 'Mastodon', url: 'https://mastodon.social', icon: 'fa-brands fa-mastodon' },
-        { name: 'Twitch', url: 'https://twitch.tv', icon: 'fa-brands fa-twitch' }
+    'Online Tools': [
+        { name: 'Github', url: 'https://github.com/motionkartik', icon: 'fa-brands fa-github' },
+        { name: 'Reddit', url: 'https://www.reddit.com/', icon: 'fa-brands fa-reddit-alien' },
+        { name: 'Raindrop', url: 'https://app.raindrop.io/my/0', icon: 'fa-solid fa-cloud' },
+        { name: 'N3rdMade', url: 'https://tbcpl.lol/', icon: 'fa-solid fa-couch' },
+        { name: 'Temp-Mail', url: 'https://temp-mail.org/en/', icon: 'fa-solid fa-envelope-circle-check' },
+        { name: 'Virus Total', url: 'https://www.virustotal.com/gui/home/upload', icon: 'fa-solid fa-flag' },
+        { name: 'Twitter', url: 'https://twitter.com/', icon: 'fa-solid fa-link' },
+        { name: 'Linkedin', url: 'https://www.linkedin.com/in/motionkartik/', icon: 'fa-solid fa-link' },
+        { name: 'Huggingface Spaces', url: 'https://huggingface.co/spaces', icon: 'fa-solid fa-link' },
+        { name: 'Reddit Piracy', url: 'https://www.reddit.com/r/Piracy/wiki/megathread/', icon: 'fa-solid fa-link' }
     ],
-    'media': [
-        { name: 'YouTube', url: 'https://youtube.com', icon: 'fa-brands fa-youtube' },
-        { name: 'Spotify', url: 'https://spotify.com', icon: 'fa-brands fa-spotify' },
-        { name: 'Netflix', url: 'https://netflix.com', icon: 'fa-solid fa-film' },
-        { name: 'SoundCloud', url: 'https://soundcloud.com', icon: 'fa-brands fa-soundcloud' },
-        { name: 'Prime Video', url: 'https://primevideo.com', icon: 'fa-brands fa-amazon' },
-        { name: 'Plex', url: 'https://plex.tv', icon: 'fa-solid fa-circle-play' }
+    'Miscellaneous': [
+        { name: 'ChatGPT', url: 'https://chatgpt.com/', icon: 'fa-solid fa-bars' },
+        { name: 'Nano Banana', url: 'https://aistudio.google.com/prompts/new_chat?model=gemini-2.5-flash-image', icon: 'fa-solid fa-bars' },
+        { name: 'Perplexity', url: 'https://www.perplexity.ai/', icon: 'fa-solid fa-bars' },
+        { name: 'Grok', url: 'https://grok.com', icon: 'fa-solid fa-bars' },
+        { name: 'Qwen', url: 'https://chat.qwen.ai/', icon: 'fa-solid fa-bars' },
+        { name: 'Claude', url: 'https://claude.ai/new', icon: 'fa-solid fa-bars' },
+        { name: 'DeepSeek', url: 'https://chat.deepseek.com/', icon: 'fa-solid fa-bars' },
+        { name: 'Kimi K2', url: 'https://www.kimi.com/', icon: 'fa-solid fa-bars' },
+        { name: 'AI Analysis', url: 'https://artificialanalysis.ai/', icon: 'fa-solid fa-bars' },
+        { name: 'Civit AI', url: 'https://civitai.com/models', icon: 'fa-solid fa-bars' }
     ],
-    'productivity': [
-        { name: 'Notion', url: 'https://notion.so', icon: 'fa-solid fa-book' },
-        { name: 'Gmail', url: 'https://mail.google.com', icon: 'fa-solid fa-envelope' },
-        { name: 'Calendar', url: 'https://calendar.google.com', icon: 'fa-solid fa-calendar-days' },
-        { name: 'Drive', url: 'https://drive.google.com', icon: 'fa-brands fa-google-drive' },
-        { name: 'Trello', url: 'https://trello.com', icon: 'fa-brands fa-trello' },
-        { name: 'Figma', url: 'https://figma.com', icon: 'fa-brands fa-figma' }
+    'AI Tools': [
+        { name: 'Case Convert', url: 'https://convertcase.net/', icon: 'fa-solid fa-link' },
+        { name: 'Excalidraw', url: 'https://excalidraw.com/', icon: 'fa-solid fa-link' },
+        { name: 'MoviesMod', url: 'https://mmodlist.com/', icon: 'fa-solid fa-link' },
+        { name: 'Squoosh', url: 'https://bulk-squoosh.vercel.app/', icon: 'fa-solid fa-link' },
+        { name: 'ImgOps', url: 'https://imgops.com/', icon: 'fa-solid fa-link' },
+        { name: 'Invoice', url: 'https://invoice-generator.com/', icon: 'fa-solid fa-link' },
+        { name: 'Photo Resize', url: 'https://testbook.com/exam-photo-crop-resize-tool', icon: 'fa-solid fa-link' },
+        { name: 'Flowcv App', url: 'https://app.flowcv.com/resumes', icon: 'fa-solid fa-link' },
+        { name: 'Transfernow', url: 'https://www.transfernow.net/en', icon: 'fa-solid fa-link' },
+        { name: 'Yandex Images', url: 'https://yandex.com/images', icon: 'fa-solid fa-link' },
+        { name: '9xbuddy', url: 'https://9xbuddy.com/', icon: 'fa-solid fa-link' }
     ]
 };
 
@@ -125,7 +141,7 @@ function loadSettings() {
         showSeconds: 'false',
         tempUnit: 'F',
         showQuotes: 'true',
-        enabledEngines: ['google', 'duckduckgo', 'github', 'youtube'],
+        enabledEngines: ['google', 'youtube'],
         preferredEngine: 'google',
         weatherLocation: 'New York,NY,US',
         openWeatherApiKey: '',
@@ -711,8 +727,10 @@ async function fetchWeather(query) {
         const temp = Math.round(data.main.temp);
         const condition = data.weather[0].main; 
         const cityName = data.name || settings.weatherLocation;
+        const humidity = data.main.humidity;
         const iconCode = data.weather[0].icon;
         const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+        const humidityIconUrl = 'https://openweathermap.org/img/widget_icons/humidity-low.svg';
 
         const tempUnit = unit === 'metric' ? '°C' : '°F';
 
@@ -725,7 +743,12 @@ async function fetchWeather(query) {
             }
         }
 
-        weatherElement.textContent = `${cityName}, ${temp}${tempUnit} ${condition}`;
+        let weatherContent = `${cityName}, ${temp}${tempUnit} ${condition}`;
+        if (humidity !== undefined) {
+            weatherContent += ` | <img src="${humidityIconUrl}" class="humidity-icon" alt="Humidity"> ${humidity}%`;
+        }
+        
+        weatherElement.innerHTML = weatherContent;
         
         // Mirror into greeting
         const greetingIcon = document.getElementById('greeting-icon');
@@ -738,7 +761,7 @@ async function fetchWeather(query) {
         try {
             const aqiData = await fetchAQI({ lat: data.coord?.lat, lon: data.coord?.lon, city: cityName });
             if (aqiData && typeof aqiData.aqi === 'number') {
-                weatherElement.textContent = `${weatherElement.textContent} | ${aqiData.aqi} AQI`;
+                weatherElement.innerHTML = `${weatherElement.innerHTML} | ${aqiData.aqi} AQI`;
             }
         } catch (err) {}
     } catch (err) {
@@ -806,7 +829,7 @@ function showMockWeather() {
         unit = '°F';
     }
 
-    weatherElement.textContent = `${temp}${unit} ${weather.condition}`;
+    weatherElement.innerHTML = `${temp}${unit} ${weather.condition} | <img src="https://openweathermap.org/img/widget_icons/humidity-low.svg" class="humidity-icon" alt="Humidity"> 00% | 00 AQI`;
 
     // Get the parent widget and find the icon element
     const widgetElement = weatherElement.parentElement;
@@ -1064,13 +1087,27 @@ function addNewTaskList() {
 }
 
 function deleteTaskList(id) {
-    if (todoLists.length <= 1) {
-        alert("You must have at least one task list.");
-        return;
-    }
     const list = todoLists.find(l => l.id === id);
+    if (!list) return;
+
     if (confirm(`Delete the entire task list "${list.title}"?`)) {
         todoLists = todoLists.filter(l => l.id !== id);
+        
+        if (todoLists.length === 0) {
+            // If deleting the last list, turn off the sidebar setting
+            saveSettings('showTodoSidebar', 'false');
+            updateToggleStates();
+            
+            // Add a default empty list back so it's ready if they turn it on later
+            todoLists = [{
+                id: 'list_' + Date.now(),
+                title: 'Tasks',
+                items: [],
+                pos: { left: '20px', top: '50%' },
+                active: true
+            }];
+        }
+        
         saveTodoLists(todoLists);
         renderTodoSidebar();
         updateFooter();
@@ -2401,7 +2438,7 @@ function exportSettings() {
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `sip-backup-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `startpage-backup-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -2530,6 +2567,7 @@ document.addEventListener('DOMContentLoaded', init);
 
 const autocompleteList = document.getElementById('autocomplete-list');
 let currentFocus = -1;
+let originalQuery = '';
 
 // Debounce helper
 function debounce(func, wait) {
@@ -2570,17 +2608,38 @@ function closeAutocomplete() {
     if (autocompleteList) {
         autocompleteList.innerHTML = '';
         currentFocus = -1;
+        originalQuery = '';
     }
 }
 
 function addActive(x) {
     if (!x) return false;
     removeActive(x);
-    if (currentFocus >= x.length) currentFocus = 0;
-    if (currentFocus < 0) currentFocus = (x.length - 1);
+    if (currentFocus >= x.length) {
+        currentFocus = -1;
+        if (searchInput) searchInput.value = originalQuery;
+        return;
+    }
+    if (currentFocus < -1) {
+        currentFocus = (x.length - 1);
+    }
+    
+    if (currentFocus === -1) {
+        if (searchInput) searchInput.value = originalQuery;
+        return;
+    }
+
     x[currentFocus].classList.add("active");
     // Scroll to active item if needed
     x[currentFocus].scrollIntoView({ block: 'nearest' });
+    
+    // Update input field with the active suggestion
+    if (searchInput) {
+        const suggestionSpan = x[currentFocus].querySelector('span');
+        if (suggestionSpan) {
+            searchInput.value = suggestionSpan.textContent;
+        }
+    }
 }
 
 function removeActive(x) {
@@ -2595,6 +2654,9 @@ async function fetchSuggestions(query) {
         closeAutocomplete();
         return;
     }
+    
+    // Store the user's typed query
+    originalQuery = query;
 
     // Only use Google suggestions if Google is the current engine (optional, but makes sense for "Google Autocomplete")
     // For now, we'll use it generally or check currentEngine. 
@@ -2637,6 +2699,7 @@ function initAutocomplete() {
     if (searchInput) {
         // Input event for fetching suggestions
         searchInput.addEventListener('input', debounce(function (e) {
+            currentFocus = -1; // Reset focus on new input
             fetchSuggestions(e.target.value);
         }, 200)); // 200ms debounce
 
